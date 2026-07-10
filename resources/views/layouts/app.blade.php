@@ -207,10 +207,28 @@
                     &copy; {{ date('Y') }} - Diseñado y desarrollado por <a href="https://edgasanc.com" target="_blank" class="text-decoration-none fw-bold" style="color: var(--ea-primary);">EDGASANC.COM</a>
                 </div>
                 <div class="small text-muted mt-1">
-                    Software de código abierto distribuido bajo la <a href="https://choosealicense.com/licenses/gpl-3.0/" target="_blank" class="text-decoration-none text-muted fw-bold border-bottom border-secondary">GNU General Public License v3.0</a>
+                    Software de código abierto distribuido bajo la <a href="#" data-bs-toggle="modal" data-bs-target="#licenseModal" class="text-decoration-none text-muted fw-bold border-bottom border-secondary">GNU General Public License v3.0</a>
                 </div>
             </footer>
         </main>
+    </div>
+
+    <!-- Modal Licencia -->
+    <div class="modal fade" id="licenseModal" tabindex="-1" aria-labelledby="licenseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content shadow-lg border-0 rounded-3">
+                <div class="modal-header bg-light border-0 py-3 px-4 border-bottom">
+                    <h5 class="modal-title fw-bold text-dark" id="licenseModalLabel"><i class="bi bi-file-earmark-text me-2" style="color: var(--ea-primary);"></i>Licencia del Software</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4" style="font-size: 0.85rem; line-height: 1.6;">
+                    {!! Illuminate\Support\Str::markdown(file_get_contents(base_path('LICENCE.md'))) !!}
+                </div>
+                <div class="modal-footer bg-light border-0 py-3 px-4 border-top">
+                    <button type="button" class="btn btn-secondary rounded-2" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     @livewireScripts
