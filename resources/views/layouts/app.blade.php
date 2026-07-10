@@ -202,8 +202,13 @@
             </div>
             
             <!-- FOOTER -->
-            <footer class="main-footer">
-                Derechos Reservados {{ date('Y') }} - Con la tecnología de <a href="https://edgasanc.com" target="_blank" class="text-decoration-none fw-bold" style="color: var(--ea-primary);">EDGASANC.COM</a>
+            <footer class="main-footer d-flex flex-column align-items-center justify-content-center py-3">
+                <div>
+                    &copy; {{ date('Y') }} - Diseñado y desarrollado por <a href="https://edgasanc.com" target="_blank" class="text-decoration-none fw-bold" style="color: var(--ea-primary);">EDGASANC.COM</a>
+                </div>
+                <div class="small text-muted mt-1">
+                    Software de código abierto distribuido bajo la <a href="https://choosealicense.com/licenses/gpl-3.0/" target="_blank" class="text-decoration-none text-muted fw-bold border-bottom border-secondary">GNU General Public License v3.0</a>
+                </div>
             </footer>
         </main>
     </div>

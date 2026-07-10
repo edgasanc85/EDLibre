@@ -50,3 +50,11 @@ Toda la administración del sistema se realiza sin recargar la página gracias a
 
 - **Edgasanc UI Admin Pro**: Toda la interfaz utiliza utilidades nativas de Bootstrap 5 con personalizaciones en CSS orientadas a generar efectos glassmorfismo y esquemas oscuros de alta gama.
 - **Bajas Lógicas**: Ningún registro central se destruye físicamente de la base de datos (con excepción del borrado en cascada), se utiliza el campo `activo` (`scopeActive`) para su visibilidad en el sistema.
+
+## 📄 Licencia
+
+Este software está licenciado bajo la **[GNU General Public License v3.0 (GPL-3.0)](LICENCE.md)**.
+
+## 📞 Soporte Técnico
+
+Para obtener soporte técnico profesional en la instalación, configuración y mantenimiento de la aplicación, por favor contacte a: **[gerencia@edgasanc.com](mailto:gerencia@edgasanc.com)**
