@@ -125,8 +125,7 @@
     
     <!-- TOPNAV -->
     <header class="topnav sticky-top">
-        <a class="navbar-brand fw-bold text-white text-decoration-none d-flex align-items-center" href="{{ url('/') }}">
-            <img src="https://edgasanc.com/storage/4095688a9f5b467d629c110a3b9a37f5545000eb.png" alt="Logo" height="30" class="me-2"> 
+        <a class="navbar-brand fw-bold text-white text-decoration-none d-flex align-items-center" href="{{ url('/home') }}">
             {{ config('app.name', 'Laravel') }}
         </a>
         
