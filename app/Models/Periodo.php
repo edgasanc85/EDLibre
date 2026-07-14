@@ -23,4 +23,19 @@ class Periodo extends Model
     {
         return $query->where('activo', true);
     }
+
+    public function compromisosFuncionals()
+    {
+        return $this->hasMany(CompromisoFuncional::class);
+    }
+
+    public function compromisosComportamentals()
+    {
+        return $this->hasMany(CompromisoComportamental::class);
+    }
+
+    public function concertaciones()
+    {
+        return $this->hasMany(Concertacion::class);
+    }
 }

@@ -9,6 +9,7 @@ class Evaluado extends Model
     protected $fillable = [
         'user_id',
         'dependencia_id',
+        'nivel_id',
         'cargo',
         'fecha_ingreso',
         'fecha_retiro',
@@ -34,5 +35,25 @@ class Evaluado extends Model
     public function dependencia()
     {
         return $this->belongsTo(Dependencia::class);
+    }
+
+    public function nivel()
+    {
+        return $this->belongsTo(Nivel::class);
+    }
+
+    public function compromisosFuncionals()
+    {
+        return $this->hasMany(CompromisoFuncional::class);
+    }
+
+    public function compromisosComportamentals()
+    {
+        return $this->hasMany(CompromisoComportamental::class);
+    }
+
+    public function concertaciones()
+    {
+        return $this->hasMany(Concertacion::class);
     }
 }

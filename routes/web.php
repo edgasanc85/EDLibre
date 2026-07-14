@@ -19,4 +19,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/periodos', App\Livewire\Periodos\PeriodoComponent::class)->name('periodos');
     Route::get('/evaluadores', App\Livewire\Evaluadores\EvaluadorComponent::class)->name('evaluadores');
     Route::get('/evaluados', App\Livewire\Evaluados\EvaluadoComponent::class)->name('evaluados');
+    Route::get('/concertacion/{id}/pdf', [App\Http\Controllers\ConcertacionPdfController::class, 'export'])->name('concertacion.pdf');
+    Route::get('/concertacion/{evaluado_id}/{periodo_id}', App\Livewire\Concertacion\ConcertacionComponent::class)->name('concertacion');
+    Route::get('/mis-compromisos', App\Livewire\MisCompromisos\MisCompromisosComponent::class)->name('mis-compromisos');
+    Route::get('/mis-evaluados', App\Livewire\MisEvaluados\MisEvaluadosComponent::class)->name('mis-evaluados');
 });

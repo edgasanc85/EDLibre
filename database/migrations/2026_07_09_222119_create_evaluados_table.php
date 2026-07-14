@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('dependencia_id')->constrained('dependencias')->onDelete('cascade');
+            $table->foreignId('nivel_id')->default(3)->constrained('nivels')->onDelete('cascade');
             $table->string('cargo');
             $table->date('fecha_ingreso');
             $table->date('fecha_retiro')->nullable()->default(null);

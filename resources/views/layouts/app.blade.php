@@ -190,6 +190,18 @@
                         <i class="bi bi-person-lines-fill me-2" style="color: var(--ea-primary);"></i> Evaluados
                     </a>
                 @endif
+                
+                @if(auth()->check() && auth()->user()->evaluados()->exists())
+                    <a class="nav-link text-white px-3 py-2 {{ request()->routeIs('mis-compromisos') ? 'bg-primary bg-opacity-25 rounded' : '' }}" href="{{ route('mis-compromisos') }}">
+                        <i class="bi bi-file-earmark-check me-2" style="color: var(--ea-primary);"></i> Mis Compromisos
+                    </a>
+                @endif
+
+                @if(auth()->check() && auth()->user()->evaluadores()->exists())
+                    <a class="nav-link text-white px-3 py-2 {{ request()->routeIs('mis-evaluados') ? 'bg-primary bg-opacity-25 rounded' : '' }}" href="{{ route('mis-evaluados') }}">
+                        <i class="bi bi-people me-2" style="color: var(--ea-primary);"></i> Mis Evaluados
+                    </a>
+                @endif
             </nav>
         </aside>
 

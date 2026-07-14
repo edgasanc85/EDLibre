@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\Models\Evaluado;
 use App\Models\User;
 use App\Models\Dependencia;
+use App\Models\Nivel;
 use Illuminate\Support\Facades\Hash;
 
 class EvaluadoComponent extends Component
@@ -19,7 +20,7 @@ class EvaluadoComponent extends Component
     public $perPage = 10;
     
     public $selected_id;
-    public $user_id, $dependencia_id, $cargo, $fecha_ingreso, $fecha_retiro;
+    public $user_id, $dependencia_id, $nivel_id, $cargo, $fecha_ingreso, $fecha_retiro;
     
     // Propiedades para crear un usuario nuevo
     public $isCreatingUser = false;
@@ -32,6 +33,7 @@ class EvaluadoComponent extends Component
     protected function rules() {
         $rules = [
             'dependencia_id' => 'required|exists:dependencias,id',
+            'nivel_id' => 'required|exists:nivels,id',
             'cargo' => 'required|string|max:255',
             'fecha_ingreso' => 'required|date',
             'fecha_retiro' => 'nullable|date|after_or_equal:fecha_ingreso',
@@ -63,7 +65,7 @@ class EvaluadoComponent extends Component
 
     public function render() {
         $records = Evaluado::active()
-            ->with(['user', 'dependencia'])
+            ->with(['user', 'dependencia', 'nivel'])
             ->whereHas('user', function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
                       ->orWhere('numero_documento', 'like', '%' . $this->search . '%');
@@ -77,8 +79,9 @@ class EvaluadoComponent extends Component
 
         $usuarios = User::orderBy('name')->get();
         $dependencias = Dependencia::active()->orderBy('nombre')->get();
+        $niveles = Nivel::active()->orderBy('nombre')->get();
 
-        return view('livewire.evaluados.evaluado-component', compact('records', 'usuarios', 'dependencias'))
+        return view('livewire.evaluados.evaluado-component', compact('records', 'usuarios', 'dependencias', 'niveles'))
             ->layout('layouts.app');
     }
     
@@ -102,6 +105,7 @@ class EvaluadoComponent extends Component
     public function resetInputFields() {
         $this->user_id = null;
         $this->dependencia_id = null;
+        $this->nivel_id = null;
         $this->cargo = '';
         $this->fecha_ingreso = '';
         $this->fecha_retiro = null;
@@ -139,6 +143,7 @@ class EvaluadoComponent extends Component
         Evaluado::create([
             'user_id' => $userIdToAssign,
             'dependencia_id' => $this->dependencia_id,
+            'nivel_id' => $this->nivel_id,
             'cargo' => $this->cargo,
             'fecha_ingreso' => $this->fecha_ingreso,
             'fecha_retiro' => empty($this->fecha_retiro) ? null : $this->fecha_retiro,
@@ -154,6 +159,7 @@ class EvaluadoComponent extends Component
         $this->selected_id = $id;
         $this->user_id = $record->user_id;
         $this->dependencia_id = $record->dependencia_id;
+        $this->nivel_id = $record->nivel_id;
         $this->cargo = $record->cargo;
         $this->fecha_ingreso = $record->fecha_ingreso ? $record->fecha_ingreso->format('Y-m-d') : '';
         $this->fecha_retiro = $record->fecha_retiro ? $record->fecha_retiro->format('Y-m-d') : null;
@@ -168,6 +174,7 @@ class EvaluadoComponent extends Component
         $this->validate([
             'user_id' => 'required|exists:users,id',
             'dependencia_id' => 'required|exists:dependencias,id',
+            'nivel_id' => 'required|exists:nivels,id',
             'cargo' => 'required|string|max:255',
             'fecha_ingreso' => 'required|date',
             'fecha_retiro' => 'nullable|date|after_or_equal:fecha_ingreso',
@@ -179,6 +186,7 @@ class EvaluadoComponent extends Component
             $record->update([
                 'user_id' => $this->user_id,
                 'dependencia_id' => $this->dependencia_id,
+                'nivel_id' => $this->nivel_id,
                 'cargo' => $this->cargo,
                 'fecha_ingreso' => $this->fecha_ingreso,
                 'fecha_retiro' => empty($this->fecha_retiro) ? null : $this->fecha_retiro,

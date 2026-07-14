@@ -114,6 +114,17 @@
                                             </select>
                                             @error('dependencia_id') <span class="text-danger small">{{ $message }}</span> @enderror
                                         </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted fw-bold">Nivel Jerárquico <span class="text-danger">*</span></label>
+                                            <select wire:model="nivel_id" class="form-select @error('nivel_id') is-invalid @enderror">
+                                                <option value="">Seleccione un nivel</option>
+                                                @foreach($niveles as $niv)
+                                                    <option value="{{ $niv->id }}">{{ $niv->nombre }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('nivel_id') <span class="text-danger small">{{ $message }}</span> @enderror
+                                        </div>
                                         
                                         <div class="mb-3">
                                             <label class="form-label text-muted fw-bold">Cargo del Evaluado <span class="text-danger">*</span></label>
@@ -193,9 +204,14 @@
                                         </div>
                                     </td>
                                     <td class="py-3 px-4 align-middle">
-                                        <span class="badge bg-secondary bg-opacity-10 text-secondary px-2 py-1 rounded-pill border border-secondary border-opacity-25 text-truncate" style="max-width: 200px; display: inline-block;">
-                                            <i class="bi bi-diagram-3 me-1"></i> {{ $record->dependencia ? $record->dependencia->nombre : 'Sin Dependencia' }}
-                                        </span>
+                                        <div class="d-flex flex-column gap-1">
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary px-2 py-1 rounded-pill border border-secondary border-opacity-25 text-truncate" style="max-width: 200px; display: inline-block;">
+                                                <i class="bi bi-diagram-3 me-1"></i> {{ $record->dependencia ? $record->dependencia->nombre : 'Sin Dependencia' }}
+                                            </span>
+                                            <span class="text-muted small">
+                                                <i class="bi bi-layers me-1"></i> {{ $record->nivel ? $record->nivel->nombre : 'Sin Nivel' }}
+                                            </span>
+                                        </div>
                                     </td>
                                     <td class="py-3 px-4 align-middle">
                                         <span class="text-dark fw-medium">{{ $record->cargo }}</span>

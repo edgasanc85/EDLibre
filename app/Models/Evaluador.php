@@ -35,4 +35,9 @@ class Evaluador extends Model
     {
         return $this->belongsTo(Dependencia::class);
     }
+
+    public function concertaciones()
+    {
+        return $this->hasMany(Concertacion::class);
+    }
 }
