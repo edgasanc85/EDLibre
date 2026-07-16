@@ -5,52 +5,60 @@
     <title>Concertación de Compromisos Laborales</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Nunito Sans', Arial, sans-serif;
             font-size: 11px;
-            color: #333;
+            color: #1e293b;
+            background-color: #ffffff;
             line-height: 1.4;
         }
         .header {
             text-align: center;
             margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #334155;
         }
         .header h1 {
-            font-size: 16px;
+            font-size: 18px;
             margin: 0;
             text-transform: uppercase;
+            color: #0f172a;
         }
         .header p {
             margin: 5px 0 0 0;
             font-size: 12px;
-            color: #555;
+            color: #475569;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            background-color: #ffffff;
         }
         th, td {
-            border: 1px solid #aaa;
-            padding: 6px;
+            border: 1px solid #94a3b8;
+            padding: 8px;
             text-align: left;
             vertical-align: top;
         }
         th {
-            background-color: #f0f0f0;
+            background-color: #f1f5f9;
             font-weight: bold;
+            color: #334155;
         }
         .section-title {
-            background-color: #e0e0e0;
+            background-color: #f8fafc;
+            color: #0f172a;
             font-weight: bold;
             text-align: center;
-            padding: 5px;
+            padding: 6px;
             margin-bottom: 10px;
-            border: 1px solid #aaa;
             text-transform: uppercase;
+            border: 1px solid #94a3b8;
         }
         .signatures {
             margin-top: 50px;
             width: 100%;
+            page-break-inside: avoid;
         }
         .signature-box {
             width: 45%;
@@ -58,15 +66,27 @@
             text-align: center;
         }
         .signature-line {
-            border-top: 1px solid #000;
+            border-top: 1px solid #0f172a;
             margin-top: 40px;
             padding-top: 5px;
         }
+        .signature-line span.fw-bold {
+            color: #0f172a;
+        }
         .fw-bold { font-weight: bold; }
         .text-center { text-align: center; }
+        
+        @page {
+            margin: 40px 40px 80px 40px;
+        }
+
     </style>
 </head>
 <body>
+
+
+
+    <main>
 
     <div class="header">
         <h1>Concertación de Compromisos Laborales</h1>
@@ -81,7 +101,16 @@
             <td style="width: 30%">{{ $concertacion->periodo->vigencia }}</td>
             <th style="width: 20%">Fechas Periodo</th>
             <td style="width: 30%">
-                {{ $concertacion->periodo->fecha_inicio->format('d/m/Y') }} al {{ $concertacion->periodo->fecha_fin->format('d/m/Y') }}
+                @php
+                    $fechaInicio = $concertacion->evaluado->fecha_ingreso && $concertacion->evaluado->fecha_ingreso->gt($concertacion->periodo->fecha_inicio) 
+                        ? $concertacion->evaluado->fecha_ingreso 
+                        : $concertacion->periodo->fecha_inicio;
+                        
+                    $fechaFin = $concertacion->evaluado->fecha_retiro && $concertacion->evaluado->fecha_retiro->lt($concertacion->periodo->fecha_fin) 
+                        ? $concertacion->evaluado->fecha_retiro 
+                        : $concertacion->periodo->fecha_fin;
+                @endphp
+                {{ $fechaInicio->format('d/m/Y') }} al {{ $fechaFin->format('d/m/Y') }}
             </td>
         </tr>
     </table>
@@ -182,7 +211,7 @@
             <div class="signature-line">
                 <span class="fw-bold">Firma del Servidor Evaluado</span><br>
                 {{ $concertacion->evaluado->user->name }}<br>
-                <span style="font-size: 9px; color: #666;">Aprobado: {{ $concertacion->fecha_aprobacion_evaluado ? $concertacion->fecha_aprobacion_evaluado->format('d/m/Y H:i') : 'N/A' }}</span>
+                <span style="font-size: 9px; color: #475569;">Aprobado: {{ $concertacion->fecha_aprobacion_evaluado ? $concertacion->fecha_aprobacion_evaluado->format('d/m/Y H:i') : 'N/A' }}</span>
             </div>
         </div>
 
@@ -190,15 +219,25 @@
             <div class="signature-line">
                 <span class="fw-bold">Firma del Evaluador</span><br>
                 {{ $evaluador->user->name ?? 'N/A' }}<br>
-                <span style="font-size: 9px; color: #666;">Aprobado: {{ $concertacion->fecha_aprobacion_evaluador ? $concertacion->fecha_aprobacion_evaluador->format('d/m/Y H:i') : 'N/A' }}</span>
+                <span style="font-size: 9px; color: #475569;">Aprobado: {{ $concertacion->fecha_aprobacion_evaluador ? $concertacion->fecha_aprobacion_evaluador->format('d/m/Y H:i') : 'N/A' }}</span>
             </div>
         </div>
         <div style="clear: both;"></div>
     </div>
-    
-    <div style="margin-top: 30px; text-align: center; font-size: 9px; color: #888;">
-        Documento generado por EDGASANC.COM el {{ now()->format('d/m/Y H:i') }}
-    </div>
+    </main>
 
+    <script type="text/php">
+        if (isset($pdf)) {
+            $pdf->page_script('
+                $text = "Documento generado con la tecnología de EDGASANC.COM el {{ now()->format("d/m/Y H:i") }} - Página " . $PAGE_NUM . " de " . $PAGE_COUNT;
+                $font = $fontMetrics->get_font("sans-serif", "normal");
+                $size = 9;
+                $width = $fontMetrics->get_text_width($text, $font, $size);
+                $x = ($pdf->get_width() - $width) / 2;
+                $y = $pdf->get_height() - 35;
+                $pdf->text($x, $y, $text, $font, $size, array(71/255, 85/255, 105/255));
+            ');
+        }
+    </script>
 </body>
 </html>

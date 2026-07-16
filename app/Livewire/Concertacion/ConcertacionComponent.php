@@ -234,6 +234,10 @@ class ConcertacionComponent extends Component
 
     private function saveData($estado)
     {
+        if ($this->concertacion && in_array($this->concertacion->estado, ['aprobado', 'fijado_de_oficio'])) {
+            abort(403, 'Esta concertación ya está finalizada y no puede ser modificada.');
+        }
+
         if (!$this->concertacion) {
             $this->concertacion = Concertacion::create([
                 'evaluado_id' => $this->evaluado_id,

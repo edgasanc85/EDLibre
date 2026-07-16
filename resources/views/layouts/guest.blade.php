@@ -24,8 +24,8 @@
         :root {
             --ea-bg: #0B0F19;
             --ea-surface: #0F1423;
-            --ea-primary: #6366F1;
-            --ea-secondary: #06B6D4;
+            --ea-primary: #2f6fa5;
+            --ea-secondary: #209f91;
             --ea-text-primary: #F8F9FA;
             --ea-border: #1E293B;
         }
@@ -111,8 +111,7 @@
     <div class="guest-container">
         <div class="text-center mb-4">
             <a href="{{ url('/') }}" class="text-decoration-none">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" height="50" class="mb-3" onerror="this.style.display='none'">
-                <h4 class="fw-bold text-white mb-0">{{ config('app.name', 'Laravel') }}</h4>
+                <img src="{{ asset('logo_horizontal.svg') }}" alt="{{ config('app.name', 'Laravel') }}" height="60" class="mb-3">
             </a>
         </div>
         

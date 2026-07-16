@@ -32,12 +32,15 @@
                                             @php
                                                 $concertacion = $evaluado->concertaciones->where('periodo_id', $periodo->id)->first();
                                             @endphp
-                                            <a href="{{ route('concertacion', ['evaluado_id' => $evaluado->id, 'periodo_id' => $periodo->id]) }}" class="btn btn-sm btn-primary rounded-pill px-3 shadow-sm">
+                                            <a href="{{ route('concertacion', ['evaluado_id' => $evaluado->id, 'periodo_id' => $periodo->id]) }}" class="btn btn-sm btn-primary rounded-pill px-3 shadow-sm mb-1">
                                                 <i class="bi bi-pencil-square me-1"></i> Concertar / Ver
                                             </a>
                                             @if($concertacion && $concertacion->estado === 'aprobado')
-                                                <a href="{{ route('concertacion.pdf', $concertacion->id) }}" target="_blank" class="btn btn-sm btn-danger rounded-pill px-3 shadow-sm ms-1">
-                                                    <i class="bi bi-file-pdf me-1"></i> Ver PDF
+                                                <a href="{{ route('evidencias', $concertacion->id) }}" class="btn btn-sm btn-info text-dark rounded-pill px-3 shadow-sm mb-1 ms-1">
+                                                    <i class="bi bi-camera me-1"></i> Evidencias
+                                                </a>
+                                                <a href="{{ route('evaluaciones', $concertacion->id) }}" class="btn btn-sm btn-warning rounded-pill px-3 shadow-sm mb-1 ms-1">
+                                                    <i class="bi bi-bar-chart-steps me-1"></i> Evaluaciones
                                                 </a>
                                             @endif
                                         </td>

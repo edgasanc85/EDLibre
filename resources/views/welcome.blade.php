@@ -18,7 +18,7 @@
     <style>
         :root {
             --ea-bg: #0B0F19;
-            --ea-primary: #6366F1;
+            --ea-primary: #2f6fa5;
             --ea-text: #E2E8F0;
             --ea-navbar-bg: rgba(11, 15, 25, 0.8);
         }
@@ -56,8 +56,8 @@
         }
 
         .btn-primary-custom:hover {
-            background-color: #4f46e5;
-            border-color: #4f46e5;
+            background-color: #245785;
+            border-color: #245785;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
         }
@@ -103,7 +103,7 @@
             font-weight: 800;
             line-height: 1.2;
             margin-bottom: 1.5rem;
-            background: linear-gradient(to right, #ffffff, #a5b4fc);
+            background: linear-gradient(to right, #ffffff, #88c0ee);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -127,7 +127,7 @@
         .feature-card:hover {
             transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(99, 102, 241, 0.3);
+            border-color: rgba(47, 111, 165, 0.5);
         }
 
         .feature-icon {
@@ -137,7 +137,7 @@
             width: 48px;
             height: 48px;
             border-radius: 12px;
-            background: rgba(99, 102, 241, 0.1);
+            background: rgba(47, 111, 165, 0.2);
             color: var(--ea-primary);
             margin-bottom: 1.5rem;
         }
@@ -157,8 +157,7 @@
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url('/') }}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                {{ config('app.name', 'EDL') }}
+                <img src="{{ asset('logo_horizontal.svg') }}" alt="{{ config('app.name', 'EDL') }}" height="50">
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -195,15 +194,15 @@
         <div class="container hero-content">
             <div class="row align-items-center min-vh-75 py-5">
                 <div class="col-lg-7 mb-5 mb-lg-0 pe-lg-5">
-                    <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-4" style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2);">
-                        <span class="badge bg-primary rounded-pill">Nuevo</span>
-                        <span style="color: #a5b4fc; font-size: 0.9rem; font-weight: 500;">Plataforma Oficial Nivel Asesor</span>
+                    <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-4" style="background: rgba(47, 111, 165, 0.2); border: 1px solid rgba(47, 111, 165, 0.3);">
+                        <span class="badge bg-primary rounded-pill" style="background-color: var(--ea-primary) !important;">Nuevo</span>
+                        <span style="color: #88c0ee; font-size: 0.9rem; font-weight: 500;">Herramienta para la EDL de empleos de LNR</span>
                     </div>
                     
                     <h1 class="hero-title">Evaluación del Desempeño Laboral</h1>
                     
                     <p class="hero-subtitle">
-                        Este sistema permitirá gestionar la <strong>evaluación del desempeño laboral para el nivel asesor</strong> en entidades públicas de Colombia. Diseñado para simplificar y automatizar el proceso de seguimiento y calificación de los funcionarios de este nivel.
+                        Este sistema permitirá gestionar la <strong>evaluación del desempeño laboral para los empleos de libre nombramiento y remoción</strong> en entidades públicas de Colombia. Diseñado para simplificar y automatizar el proceso de seguimiento y calificación de los funcionarios de este nivel.
                     </p>
                     
                     <div class="d-flex flex-column flex-sm-row gap-3 mt-4">

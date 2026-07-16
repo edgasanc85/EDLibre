@@ -26,8 +26,8 @@ El agente aplicará rigurosamente los siguientes principios de experiencia de us
 El agente debe basar todas sus recomendaciones técnicas en las siguientes especificaciones CSS nativas de la aplicación (definidas en `:root`):
 
 ### A. Paleta de Colores (Variables CSS y Clases Bootstrap)
-- **Primary (`--ea-primary`):** `#6366F1` (Índigo para elementos activos, botones primarios y acentos principales, basado en gradientes de edgasanc.com).
-- **Secondary (`--ea-secondary`):** `#06B6D4` (Cian para acentos secundarios, flujos alternativos e iconos de acción).
+- **Primary (`--ea-primary`):** `#2f6fa5` (Azul corporativo para elementos activos, botones primarios y acentos principales).
+- **Secondary (`--ea-secondary`):** `#209f91` (Verde azulado/Teal para acentos secundarios, flujos alternativos e iconos de acción).
 - **Success (`--ea-success`):** `#10B981` (Esmeralda para estados positivos, éxitos o métricas).
 - **Info (`--ea-info`):** `#0DCAF0` (Cian de Bootstrap para información general o notificaciones).
 - **Warning (`--ea-warning`):** `#FFC107` (Amarillo de Bootstrap para alertas preventivas o estados pendientes).
@@ -171,8 +171,8 @@ Estructura maestra resumida del Layout EDGASANC-WMS:
         :root {
             --ea-bg: #0B0F19;
             --ea-surface: #0F1423;
-            --ea-primary: #6366F1;
-            --ea-secondary: #06B6D4;
+            --ea-primary: #2f6fa5;
+            --ea-secondary: #209f91;
             --ea-text-primary: #F8F9FA;
             --ea-border: #1E293B;
             --ea-sidenav-bg: #0B0F19;

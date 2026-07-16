@@ -53,4 +53,12 @@ class CompromisoFuncional extends Model
     {
         return $this->belongsTo(Concertacion::class);
     }
+
+    /**
+     * Relación: Un compromiso funcional tiene muchas evidencias.
+     */
+    public function evidencias()
+    {
+        return $this->hasMany(EvidenciaFuncional::class);
+    }
 }

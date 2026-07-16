@@ -44,7 +44,8 @@ class ConcertacionPdfController extends Controller
         $entidadRaiz = \App\Models\Dependencia::whereNull('parent_id')->first();
         $nombreEntidad = $entidadRaiz ? $entidadRaiz->nombre : 'Sistema de Evaluación del Desempeño Laboral';
 
-        $pdf = Pdf::loadView('pdf.concertacion', compact('concertacion', 'evaluador', 'nombreEntidad'))
+        $pdf = Pdf::setOption('isPhpEnabled', true)
+            ->loadView('pdf.concertacion', compact('concertacion', 'evaluador', 'nombreEntidad'))
             ->setPaper('legal', 'portrait');
             
         return $pdf->download('concertacion_' . $concertacion->evaluado->user->numero_documento . '_' . $concertacion->periodo->vigencia . '.pdf');

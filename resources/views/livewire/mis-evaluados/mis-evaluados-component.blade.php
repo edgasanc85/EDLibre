@@ -45,8 +45,8 @@
                                                     <i class="bi bi-file-check me-1"></i> Revisar {{ $periodo->vigencia }}
                                                 </a>
                                                 @if($concertacion && $concertacion->estado === 'aprobado')
-                                                    <a href="{{ route('concertacion.pdf', $concertacion->id) }}" target="_blank" class="btn btn-sm btn-outline-danger rounded-pill mb-1 shadow-sm" title="Descargar PDF">
-                                                        <i class="bi bi-file-pdf me-1"></i> PDF
+                                                    <a href="{{ route('evaluaciones', $concertacion->id) }}" class="btn btn-sm btn-outline-warning rounded-pill mb-1 shadow-sm">
+                                                        <i class="bi bi-bar-chart-steps me-1"></i> Calificar
                                                     </a>
                                                 @endif
                                             @endforeach

@@ -1,13 +1,50 @@
-<p align="center">
-    <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
-</p>
+# EDLibre 🇨🇴
 
-<p align="center">
-    <img src="https://img.shields.io/badge/PHP-8.3+-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP 8.3+">
-    <img src="https://img.shields.io/badge/Laravel-13.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel 13.x">
-    <img src="https://img.shields.io/badge/Livewire-4.x-FB70A9?style=for-the-badge&logo=livewire&logoColor=white" alt="Livewire 4.x">
-    <img src="https://img.shields.io/badge/Bootstrap-5.x-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap 5.x">
-</p>
+> **La plataforma abierta para la evaluación del desempeño de servidores de Libre Nombramiento y Remoción en Colombia.**
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Estado del Proyecto](https://img.shields.io/badge/Estado-En%20Desarrollo-orange.svg)]()
+
+---
+
+### **Eslogan**
+> *"Transparencia en el servicio, confianza en el desempeño."*
+
+---
+
+## 📌 ¿Qué es EDLibre?
+
+**EDLibre** es un sistema de información y software libre (licenciado bajo **GPLv3**) diseñado específicamente para registrar, gestionar y analizar la **Evaluación del Desempeño Laboral (EDL)** de los servidores públicos de Colombia pertenecientes a empleos de **Libre Nombramiento y Remoción (LNYR)**. 
+
+A diferencia de los sistemas tradicionales enfocados en carrera administrativa, **EDLibre** se adapta a la naturaleza especial de estos cargos, permitiendo estructurar compromisos de gestión y evaluar de forma ágil a funcionarios en los niveles:
+*   **Asesor**
+*   **Profesional**
+*   **Técnico**
+*   **Asistencial**
+
+## 💡 ¿Por qué EDLibre?
+
+En el Estado colombiano, los cargos de Libre Nombramiento y Remoción exigen una relación de confianza institucional y un alto estándar técnico. **EDLibre** facilita a las Oficinas de Talento Humano y a los evaluadores un seguimiento transparente y objetivo basado en evidencias, de acuerdo con los lineamientos del Departamento Administrativo de la Función Pública (DAFP).
+
+### Características Clave:
+*   **Naturaleza Open Source (GPLv3):** Cero costos de licenciamiento para las alcaldías, gobernaciones y entidades nacionales. Impulsa la soberanía tecnológica del país.
+*   **Adaptabilidad Jerárquica:** Formularios y criterios de evaluación dinámicos según el nivel (desde el apoyo operativo en el nivel asistencial hasta la toma de decisiones del nivel asesor).
+*   **Enfoque LNYR:** Seguimiento de compromisos y metas institucionales orientados a la confianza y la gestión del cargo.
+*   **Reportes y Trazabilidad:** Generación de reportes automáticos e históricos listos para auditorías internas.
+
+## 🛠️ Tecnologías utilizadas
+*(Completa esto con tu stack tecnológico actual, por ejemplo: Node.js, Python, PostgreSQL, React, etc.)*
+
+## 🤝 Cómo contribuir
+¡La construcción del software público es un esfuerzo colectivo! Puedes colaborar de las siguientes maneras:
+1. Reportando errores (Issues).
+2. Proponiendo mejoras en la legislación aplicable a la plataforma.
+3. Enviando Pull Requests con nuevas funcionalidades.
+
+Consulta nuestro archivo [CONTRIBUTING.md](CONTRIBUTING.md) para más detalles.
+
+## 📄 Licencia
+Este proyecto está licenciado bajo la **Licencia Pública General de GNU v3.0 (GPLv3)** - consulta el archivo [LICENSE](LICENSE) para más detalles.
 
 # Sistema de Evaluación del Desempeño Laboral (EDL)
 

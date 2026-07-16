@@ -24,8 +24,8 @@
         :root {
             --ea-bg: #0B0F19;
             --ea-surface: #0F1423;
-            --ea-primary: #6366F1;
-            --ea-secondary: #06B6D4;
+            --ea-primary: #2f6fa5;
+            --ea-secondary: #209f91;
             --ea-text-primary: #F8F9FA;
             --ea-border: #1E293B;
             --ea-sidenav-bg: #0B0F19;
@@ -126,7 +126,7 @@
     <!-- TOPNAV -->
     <header class="topnav sticky-top">
         <a class="navbar-brand fw-bold text-white text-decoration-none d-flex align-items-center" href="{{ url('/home') }}">
-            {{ config('app.name', 'Laravel') }}
+            <img src="{{ asset('logo_horizontal.svg') }}" alt="{{ config('app.name', 'Laravel') }}" height="40" class="d-inline-block align-text-top">
         </a>
         
         <div class="d-flex align-items-center">

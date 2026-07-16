@@ -15,12 +15,14 @@ class Concertacion extends Model
         'estado',
         'fecha_aprobacion_evaluado',
         'fecha_aprobacion_evaluador',
+        'evidencias_enviadas',
         'activo',
     ];
 
     protected $casts = [
         'fecha_aprobacion_evaluado' => 'datetime',
         'fecha_aprobacion_evaluador' => 'datetime',
+        'evidencias_enviadas' => 'boolean',
         'activo' => 'boolean',
     ];
 
@@ -52,5 +54,10 @@ class Concertacion extends Model
     public function compromisosComportamentals()
     {
         return $this->hasMany(CompromisoComportamental::class);
+    }
+
+    public function evaluaciones()
+    {
+        return $this->hasMany(Evaluacion::class);
     }
 }

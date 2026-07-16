@@ -2,13 +2,30 @@
     <div class="container-fluid px-4 py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3 mb-0 text-dark fw-bold">Fijación de Compromisos</h1>
-            <div>
+            <div class="d-flex align-items-stretch gap-2" style="height: 36px;">
                 @if($concertacion)
-                    <span class="badge {{ $concertacion->estado == 'aprobado' ? 'bg-success' : ($concertacion->estado == 'en_revision' ? 'bg-warning text-dark' : 'bg-secondary') }} px-3 py-2 rounded-pill">
+                    @if($concertacion->estado == 'aprobado')
+                        <a href="{{ route('concertacion.pdf', $concertacion->id) }}" target="_blank" class="btn btn-sm btn-outline-danger rounded-pill shadow-sm d-flex align-items-center px-3 m-0">
+                            <i class="bi bi-file-pdf me-1"></i> Descargar PDF
+                        </a>
+                    @endif
+                    <span class="badge {{ $concertacion->estado == 'aprobado' ? 'bg-success' : ($concertacion->estado == 'en_revision' ? 'bg-warning text-dark' : 'bg-secondary') }} rounded-pill d-flex align-items-center px-3 m-0 shadow-sm" style="font-size: 0.85rem; font-weight: 500;">
                         Estado: {{ strtoupper(str_replace('_', ' ', $concertacion->estado)) }}
                     </span>
                 @else
-                    <span class="badge bg-secondary px-3 py-2 rounded-pill">Estado: NUEVO (Borrador)</span>
+                    <span class="badge bg-secondary rounded-pill d-flex align-items-center px-3 m-0 shadow-sm" style="font-size: 0.85rem; font-weight: 500;">
+                        Estado: NUEVO (Borrador)
+                    </span>
+                @endif
+                @if($rolActual == 'evaluador')
+                    <a href="{{ route('mis-evaluados') }}" class="btn btn-outline-secondary rounded-pill px-4">
+                        <i class="bi bi-arrow-left me-1"></i> Volver
+                    </a>
+                @endif
+                @if($rolActual == 'evaluado')
+                    <a href="{{ route('mis-compromisos') }}" class="btn btn-outline-secondary rounded-pill px-4">
+                        <i class="bi bi-arrow-left me-1"></i> Volver
+                    </a>
                 @endif
             </div>
         </div>
@@ -144,10 +161,6 @@
         <!-- Acciones Flujo -->
         <div class="card shadow-sm">
             <div class="card-body p-4 d-flex justify-content-between align-items-center">
-                <div class="text-muted small">
-                    <strong>Rol actual:</strong> <span class="text-primary text-uppercase">{{ $rolActual }}</span>
-                </div>
-                
                 <div class="d-flex gap-2">
                     @if($rolActual == 'evaluado')
                         @if(!$concertacion || $concertacion->estado == 'borrador')
@@ -159,12 +172,14 @@
                     @endif
                     
                     @if($rolActual == 'evaluador')
-                        <button wire:click="fixDeOficio" class="btn btn-outline-danger rounded-pill px-4">
-                            <i class="bi bi-exclamation-triangle me-1"></i> Fijar de Oficio
-                        </button>
-                        <button wire:click="approve" class="btn btn-success rounded-pill px-4 shadow-sm">
-                            <i class="bi bi-check-circle me-1"></i> Aprobar Concertación
-                        </button>
+                        @if($concertacion && $concertacion->estado !== 'aprobado')
+                            <button wire:click="fixDeOficio" class="btn btn-outline-danger rounded-pill px-4">
+                                <i class="bi bi-exclamation-triangle me-1"></i> Fijar de Oficio
+                            </button>
+                            <button wire:click="approve" class="btn btn-success rounded-pill px-4 shadow-sm">
+                                <i class="bi bi-check-circle me-1"></i> Aprobar Concertación
+                            </button>
+                        @endif
                     @endif
                 </div>
             </div>
