@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,11 +16,35 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Administrador Principal del Sistema
+        // IMPORTANTE: Editar estos datos antes de ejecutar php artisan db:seed para el primer ingreso
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'tipo_documento' => 'Cédula Ciudadanía',
+            'numero_documento' => '1234567890',
+            'name' => 'Administrador Sistema',
+            'email' => 'admin@edgasanc.com',
+            'password' => Hash::make('admin123'),
+            'is_admin' => true,
+        ]);
+
+        // Niveles Jerárquicos
+        $niveles = [
+            ['id' => 1, 'nombre' => 'Comunes', 'activo' => true],
+            ['id' => 2, 'nombre' => 'Directivo', 'activo' => true],
+            ['id' => 3, 'nombre' => 'Asesor', 'activo' => true],
+            ['id' => 4, 'nombre' => 'Profesional', 'activo' => true],
+            ['id' => 5, 'nombre' => 'Técnico', 'activo' => true],
+            ['id' => 6, 'nombre' => 'Asistencial', 'activo' => true],
+        ];
+
+        foreach ($niveles as $nivel) {
+            \App\Models\Nivel::firstOrCreate(['id' => $nivel['id']], $nivel);
+        }
+
+        // Sembrar Competencias y Conductas de Ley
+        $this->call([
+            CompetenciaSeeder::class,
+            ConductaSeeder::class,
         ]);
     }
 }

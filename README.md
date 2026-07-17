@@ -83,6 +83,19 @@ Toda la administración del sistema se realiza sin recargar la página gracias a
 5. **Base de Datos**: `php artisan migrate --seed`
 6. **Compilar Activos**: `npm run build` o `npm run dev`
 
+## 🚀 Primeros Pasos (Primer Ingreso)
+
+Dado que **EDLibre** es un sistema cerrado institucionalmente, **la ruta de registro público no está habilitada**. Para poder ingresar al sistema por primera vez, es necesario contar con un usuario Administrador creado desde la instalación.
+
+**Antes de ejecutar las migraciones y seeders (Paso 5)**, configure las credenciales de este primer usuario administrador:
+
+1. Abra el archivo `database/seeders/DatabaseSeeder.php`.
+2. Localice el bloque donde se crea el "Administrador Sistema".
+3. Modifique los campos `numero_documento`, `name`, `email` y `password` con los datos reales de la persona que administrará la plataforma.
+4. Ejecute el comando: `php artisan migrate --seed`.
+
+Una vez finalizado, inicie sesión en la aplicación utilizando el correo electrónico y la contraseña que especificó.
+
 ## 🛡 Consideraciones
 
 - **Edgasanc UI Admin Pro**: Toda la interfaz utiliza utilidades nativas de Bootstrap 5 con personalizaciones en CSS orientadas a generar efectos glassmorfismo y esquemas oscuros de alta gama.

@@ -21,7 +21,7 @@
                         <div class="col me-2">
                             <div class="text-xs fw-bold text-uppercase mb-1" style="color: var(--ea-primary);">
                                 Estado</div>
-                            <div class="h5 mb-0 fw-bold text-white">{{ __('You are logged in!') }}</div>
+                            <div class="h5 mb-0 fw-bold text-white">¡Has iniciado sesión!</div>
                         </div>
                         <div class="col-auto">
                             <i class="bi bi-person-check fs-2 text-muted"></i>
@@ -42,5 +42,20 @@
             </div>
         </div>
     </div>
+
+    @if(Auth::user()->is_admin)
+        <div class="row mt-2">
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white pt-4 pb-3 border-bottom">
+                        <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-bar-chart-steps me-2 text-primary"></i>Visor de Procesos EDL</h5>
+                    </div>
+                    <div class="card-body bg-light p-4">
+                        <livewire:dashboard.dashboard-admin-component />
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 @endsection
