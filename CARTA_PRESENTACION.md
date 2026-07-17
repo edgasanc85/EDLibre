@@ -10,7 +10,7 @@ A través de esta comunicación, queremos presentarnos como un aliado tecnológi
 
 Entendemos que la tecnología en el Estado no solo debe funcionar, sino que debe cumplir con rigurosos marcos legales e institucionales. Esta premisa ha sido el pilar de nuestro CEO, **Edgar Alberto Sánchez**, quien cuenta con una amplia y demostrada trayectoria liderando el diseño y desarrollo de plataformas críticas a nivel nacional y distrital:
 
-*   **Escuela Superior de Administración Pública (ESAP):** Autor de la primera versión del sistema **SIRECEC (2012-2017)** y arquitecto del **Software de Concursos (2013 a la fecha)**, sistemas fundamentales para la capacitación y selección meritocrática en el país.
+*   **Escuela Superior de Administración Pública (ESAP):** Autor de la primera versión del sistema **SIRECEC (2012-2017)** y arquitecto del **Software de Concursos (2013 a la 2017)**, sistemas fundamentales para la capacitación y selección meritocrática en el país.
 *   **Departamento Administrativo del Servicio Civil Distrital (DASCD):** Creador y desarrollador de soluciones clave para la gestión del talento humano en Bogotá, incluyendo el **Aula del Saber Distrital (2017-2026)**, el **Portal de Bienestar Distrital (2022-2026)** y el **Portal de Aspirantes (2024-2026)**.
 
 Esta experiencia de más de una década nos permite comprender de primera mano que, en el sector público, los problemas complejos requieren soluciones eficaces, contundentes y, sobre todo, adaptadas a la normativa vigente.
