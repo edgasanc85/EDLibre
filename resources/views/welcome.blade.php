@@ -479,7 +479,7 @@
                         @auth
                             <a href="{{ url('/home') }}" class="btn-glow text-decoration-none">Acceder al Sistema</a>
                         @else
-                            <a href="{{ route('login') }}" class="btn-glow text-decoration-none">Comenzar Ahora</a>
+                            <a href="https://github.com/edgasanc85/EDLibre" target="_blank" class="btn-glow text-decoration-none">Descargar Ahora</a>
                             <a href="#modelo" class="btn-outline-glass text-decoration-none">Conocer el Modelo</a>
                         @endauth
                     </div>
