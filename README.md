@@ -52,13 +52,6 @@ Este proyecto está licenciado bajo la **Licencia Pública General de GNU v3.0 (
 
 ## 🛠 Instalación y Configuración
 
-**Antes de ejecutar las migraciones y seeders (Paso 5)**, configure las credenciales de este primer usuario administrador:
-
-1. Abra el archivo `database/seeders/DatabaseSeeder.php`.
-2. Localice el bloque donde se crea el "Administrador Sistema".
-3. Modifique los campos `numero_documento`, `name`, `email` y `password` con los datos reales de la persona que administrará la plataforma.
-4. Ejecute el comando: `php artisan migrate --seed`.
-
 1. **Clonar Repositorio**: `git clone https://github.com/edgasanc85/EDLibre`
 2. **Dependencias**: `composer install` y `npm install`
 3. **Entorno**: Copiar `.env.example` a `.env` y configurar credenciales de base de datos.
@@ -67,6 +60,13 @@ Este proyecto está licenciado bajo la **Licencia Pública General de GNU v3.0 (
 6. **Compilar Activos**: `npm run build` o `npm run dev`
 
 ## 🚀 Primeros Pasos (Primer Ingreso)
+
+**Antes de ejecutar las migraciones y seeders (Paso 5)**, configure las credenciales de este primer usuario administrador:
+
+1. Abra el archivo `database/seeders/DatabaseSeeder.php`.
+2. Localice el bloque donde se crea el "Administrador Sistema".
+3. Modifique los campos `numero_documento`, `name`, `email` y `password` con los datos reales de la persona que administrará la plataforma.
+4. Ejecute el comando: `php artisan migrate --seed`.
 
 Dado que **EDLibre** es un sistema cerrado institucionalmente, **la ruta de registro público no está habilitada**. Para poder ingresar al sistema por primera vez, es necesario contar con un usuario Administrador creado desde la instalación.
 
