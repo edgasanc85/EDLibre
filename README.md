@@ -7,7 +7,7 @@
 > **La plataforma abierta para la evaluación del desempeño de servidores de Libre Nombramiento y Remoción en Colombia.**
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Estado del Proyecto](https://img.shields.io/badge/Estado-En%20Desarrollo-orange.svg)]()
+[![Estado del Proyecto](https://img.shields.io/badge/Estado-BETA-blueviolet.svg)]()
 
 ---
 
