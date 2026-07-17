@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://edlibre.edgasanc.com/logo_horizontal.svg" alt="EDLibre Logo" width="400">
+</p>
+
 # EDLibre 🇨🇴
 
 > **La plataforma abierta para la evaluación del desempeño de servidores de Libre Nombramiento y Remoción en Colombia.**
