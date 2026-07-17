@@ -54,4 +54,4 @@ Cordialmente,
 **EDGAR ALBERTO SANCHEZ GONZALEZ**  
 *CEO* | **EDGASANC.COM**  
 📧 [gerencia@edgasanc.com](mailto:gerencia@edgasanc.com)  
-🌐 [https://edgasanc.co](https://edgasanc.co)
+🌐 [https://edgasanc.com](https://edgasanc.co)
