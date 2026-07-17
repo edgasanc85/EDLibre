@@ -38,9 +38,11 @@ Con un fuerte compromiso cívico y tecnológico, **queremos poner esta solución
 
 Lo invitamos a conocer el proyecto, revisar su documentación y descargar el código fuente directamente desde nuestro repositorio público:
 
-**🔗 [Descargar e instalar EDLibre](https://github.com/edgasanc85/EDLibre)** *(Ajustar URL si es necesario)*
+**🔗 [Descargar e instalar EDLibre](https://github.com/edgasanc85/EDLibre)**
 
-En **EDGASANC.COM** creemos firmemente que la tecnología pública debe ser construida para el beneficio público. EDLibre es nuestro aporte para garantizar que la evaluación del desempeño siga siendo un pilar de transparencia institucional, sin que ello represente un costo exorbitante para el erario.
+**🔗 [Documentación de EDLibre](https://edlibre.edgasanc.com/documentacion)**
+
+En **EDGASANC.COM** creemos firmemente que la tecnología debe ser construida para el beneficio público. EDLibre es nuestro aporte para garantizar que la evaluación del desempeño siga siendo un pilar de transparencia institucional, sin que ello represente un costo exorbitante para el erario.
 
 Si su equipo de Tecnologías de la Información o Talento Humano requiere asesoría especializada para la implementación de EDLibre en su infraestructura, o desea conocer más sobre nuestros servicios de consultoría avanzada, no dude en contactarnos.
 
@@ -48,6 +50,8 @@ Quedamos a su entera disposición.
 
 Cordialmente,
 
-**Equipo de EDGASANC.COM**
-Soluciones Tecnológicas para el Sector Público
-[Sitio Web / Datos de Contacto]
+--
+**EDGAR ALBERTO SANCHEZ GONZALEZ**  
+*CEO* | **EDGASANC.COM**  
+📧 [gerencia@edgasanc.com](mailto:gerencia@edgasanc.com)  
+🌐 [https://edgasanc.co](https://edgasanc.co)
