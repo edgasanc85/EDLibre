@@ -405,7 +405,7 @@
                 <section id="concertacion-evaluador" class="mb-5">
                     <h2><span class="step-badge bg-secondary">2</span> Concertación de Compromisos</h2>
                     <p>Es la primera etapa del ciclo, donde se definen y acuerdan los objetivos (Compromisos Funcionales) que el funcionario deberá cumplir a lo largo de la vigencia.</p>
-                    <div class="card p-4">
+                    <div class="card p-4 mb-3">
                         <h5 class="fw-bold"><i class="bi bi-handshake text-success me-2"></i> Revisión y Aprobación</h5>
                         <ul class="text-muted mb-0">
                             <li class="mb-2"><strong>Proponer:</strong> Generalmente, el evaluado formulará inicialmente los compromisos y sus pesos porcentuales (los cuales sumados deben dar el 100%).</li>
@@ -413,13 +413,20 @@
                             <li class="mb-2"><strong>Generación de Acta:</strong> Una vez aprobados, el sistema habilitará el botón para descargar el acta en PDF (que incluye fecha y hora de aprobación para su firma física o respaldo magnético).</li>
                         </ul>
                     </div>
+                    
+                    <div class="alert alert-danger d-flex align-items-center" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+                        <div>
+                            <strong>Error Frecuente en LNyR:</strong> Aprobar compromisos ambiguos o que no son medibles. Evite verbos como <em>"Apoyar"</em> o <em>"Acompañar"</em> sin un entregable claro. Los compromisos deben ser específicos (Ej. <em>"Formular y presentar 1 documento técnico sobre..."</em>). Además, asegúrese de que el peso asignado refleje el impacto real de esa tarea en la dependencia.
+                        </div>
+                    </div>
                 </section>
 
                 <!-- Evidencias -->
                 <section id="evidencias-evaluador" class="mb-5">
                     <h2><span class="step-badge bg-secondary">3</span> Validación de Evidencias</h2>
                     <p>Durante la ejecución del periodo, el evaluado deberá subir archivos u oficios como prueba del avance y cumplimiento de sus compromisos funcionales.</p>
-                    <div class="card p-4 border-start border-4 border-warning">
+                    <div class="card p-4 border-start border-4 border-warning mb-3">
                         <p class="text-muted">Como evaluador, su deber es el de supervisión continua:</p>
                         <ul class="text-muted mb-0">
                             <li class="mb-2">Ingrese a la vista de <strong>Evidencias</strong> del funcionario.</li>
@@ -427,21 +434,56 @@
                             <li><strong>Verificación:</strong> Valide la autenticidad y el volumen de la evidencia; esto será su soporte objetivo al momento de emitir la calificación final.</li>
                         </ul>
                     </div>
+
+                    <div class="alert alert-primary d-flex align-items-center" role="alert">
+                        <i class="bi bi-lightbulb-fill fs-4 me-3"></i>
+                        <div>
+                            <strong>Recomendación Procedimental:</strong> No espere hasta el final del semestre o año para revisar las evidencias. La falta de retroalimentación oportuna puede invalidar un desempeño deficiente si el evaluado apela alegando que nunca fue advertido sobre la insuficiencia de sus entregables.
+                        </div>
+                    </div>
                 </section>
 
                 <!-- Evaluacion -->
                 <section id="evaluacion-definitiva" class="mb-5">
-                    <h2><span class="step-badge bg-secondary">4</span> Evaluación Definitiva</h2>
-                    <p>Al concluir el periodo, usted deberá realizar la calificación numérica oficial que cerrará el ciclo EDL (Libre Nombramiento y Remoción) del funcionario.</p>
+                    <h2><span class="step-badge bg-secondary">4</span> Evaluaciones y Calificación Definitiva</h2>
+                    <p>Durante y al concluir el periodo, usted deberá registrar distintos eventos de evaluación. El sistema EDLibre se encarga de las matemáticas complejas por usted, garantizando que el proceso de calificación cumpla con las normativas de EDL.</p>
+                    
+                    <div class="card p-4 border-info border-start border-4 mb-3">
+                        <h5 class="fw-bold"><i class="bi bi-calendar-event text-info me-2"></i> Tipos de Evaluaciones (Causales)</h5>
+                        <p class="text-muted mb-2">Para evaluar, haga clic en <strong>Nueva Evaluación</strong> en el panel de su evaluado. Encontrará tres grupos de causales:</p>
+                        <ul class="text-muted mb-0">
+                            <li class="mb-2"><strong>Evaluaciones Ordinarias (Semestrales):</strong> Son los parciales obligatorios (Primer semestre y Segundo semestre).</li>
+                            <li class="mb-2"><strong>Evaluaciones Eventuales:</strong> Úselas cuando ocurra un evento extraordinario que requiera cortar la evaluación, por ejemplo: un cambio en el cargo del evaluado, una separación temporal mayor a 30 días, o si <strong>usted (el evaluador)</strong> cambia de cargo y necesita dejar evaluados a sus subordinados antes de retirarse.</li>
+                            <li><strong>Consolidaciones:</strong> El sistema consolida automáticamente las notas para generar la calificación semestral o definitiva.</li>
+                        </ul>
+                    </div>
+
+                    <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                        <i class="bi bi-shield-exclamation fs-3 me-3"></i>
+                        <div>
+                            <strong>¡ALERTA LEGAL Y PROCEDIMENTAL!</strong> Uno de los errores más graves y sancionables disciplinariamente en la administración pública es la <em>omisión de evaluación eventual por retiro del evaluador</em>. Si usted (Jefe Inmediato) va a renunciar, es trasladado o sale a vacaciones por más de 30 días, <strong>ESTÁ OBLIGADO A EVALUAR</strong> a todo su personal a cargo hasta su último día laboral mediante la causal <em>"Por cambio de evaluador"</em>, de lo contrario podría enfrentar investigaciones disciplinarias.
+                        </div>
+                    </div>
+
+                    <div class="card p-4 border-warning border-start border-4 mb-4">
+                        <h5 class="fw-bold"><i class="bi bi-clock-history text-warning me-2"></i> Las Fechas Son Clave</h5>
+                        <p class="text-muted mb-0">Cada vez que usted cree una evaluación (ordinaria o eventual), el sistema le exigirá registrar la <strong>Fecha de Inicio</strong> y <strong>Fecha de Fin</strong> exacta que abarca dicho corte. 
+                        <br><br>
+                        <strong>¿Por qué?</strong> Porque el sistema calculará exactamente <strong>cuántos días</strong> abarca cada calificación para ponderar matemáticamente la nota final. Adicionalmente, se cuenta con una validación inteligente para evitar errores: el sistema no le permitirá ingresar fechas que estén por fuera del Periodo Oficial (Vigencia).</p>
+                    </div>
+
                     <div class="card p-4 border-primary border-start border-4">
-                        <h5 class="fw-bold"><i class="bi bi-clipboard2-data text-primary me-2"></i> Proceso de Calificación</h5>
+                        <h5 class="fw-bold"><i class="bi bi-clipboard2-data text-primary me-2"></i> Proceso de Calificación y Consolidación</h5>
                         <ol class="text-muted mb-3 mt-2">
-                            <li class="mb-2"><strong>Competencias Funcionales (85%):</strong> Evaluará de 1 a 100 cada uno de los compromisos funcionales concertados inicialmente, con base en las evidencias revisadas.</li>
-                            <li class="mb-2"><strong>Competencias Comportamentales (15%):</strong> Calificará al funcionario evaluando las conductas específicas (ej. <em>Liderazgo, Trabajo en equipo</em>) que el Administrador parametrizó para el Nivel Jerárquico del empleado.</li>
-                            <li><strong>Consolidación del Puntaje:</strong> Al guardar, el sistema ponderará matemáticamente ambos componentes según sus pesos y arrojará el nivel de cumplimiento (Sobresaliente, Satisfactorio, No Satisfactorio).</li>
+                            <li class="mb-2"><strong>Calificar Compromisos (85%):</strong> Evaluará de 1 a 100 cada compromiso funcional basado en las evidencias de la plataforma.</li>
+                            <li class="mb-2"><strong>Calificar Conductas (15%):</strong> Calificará de 1 a 100 las conductas comportamentales asociadas al evaluado.</li>
+                            <li class="mb-2"><strong>Notificación:</strong> Al finalizar, pulse <em>"Notificar a Evaluado"</em>. Esta acción cerrará la edición y enviará la nota al evaluado para su aceptación.</li>
+                            <li class="mb-2"><strong>¡Magia del Sistema (Consolidación Automática)!:</strong> Como evaluador, <strong>no necesita usar calculadoras</strong> para sacar la nota definitiva anual. 
+                                <br><br>
+                                En el preciso momento en que usted califique y notifique el <strong>"Parcial segundo semestre"</strong>, EDLibre tomará todas las evaluaciones previas del funcionario que hayan sido aceptadas y generará, de manera <strong>100% automática</strong>, la <em>"Consolidación Definitiva"</em> mediante un promedio exacto ponderado por días.</li>
                         </ol>
-                        <div class="alert alert-info mb-0 p-2 text-center small">
-                            <i class="bi bi-file-earmark-pdf me-1"></i> Cuando el evaluado acepte la calificación (Estado "Aceptada"), usted podrá generar el <strong>Reporte Oficial en PDF</strong> con el consolidado y área de firmas.
+                        <div class="alert alert-success mb-0 p-3 text-center small fw-bold">
+                            <i class="bi bi-file-earmark-pdf fs-5 d-block mb-1"></i> Una vez el evaluado acepte las calificaciones, usted podrá descargar el Reporte Oficial en PDF de la Consolidación Definitiva con el nivel de cumplimiento exacto (Sobresaliente, Satisfactorio, etc.) listo para firma.
                         </div>
                     </div>
                 </section>
@@ -471,7 +513,7 @@
                 <section id="concertacion-evaluado" class="mb-5">
                     <h2><span class="step-badge bg-info text-white">2</span> Formulación de la Concertación</h2>
                     <p>En esta fase inicial usted debe redactar los <strong>Compromisos Funcionales</strong>. Estos son los objetivos concretos y medibles que se compromete a alcanzar durante el periodo.</p>
-                    <div class="card p-4">
+                    <div class="card p-4 mb-3">
                         <h5 class="fw-bold"><i class="bi bi-pencil-square text-info me-2"></i> Creación de Compromisos</h5>
                         <ol class="text-muted mb-0">
                             <li class="mb-2">Haga clic en el botón <strong>Concertar</strong> dentro de "Mis Compromisos".</li>
@@ -481,13 +523,20 @@
                             <li><strong>Reporte Oficial:</strong> Tras la aprobación de su jefe, la plataforma habilitará un botón para descargar el acta de concertación en formato PDF.</li>
                         </ol>
                     </div>
+
+                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+                        <i class="bi bi-exclamation-circle-fill fs-4 me-3"></i>
+                        <div>
+                            <strong>Tip para el Evaluado (LNyR):</strong> Proyecte únicamente compromisos que dependan 100% de su gestión. Un error común es concertar compromisos que requieren aprobaciones presupuestales de terceros o firmas externas, lo cual le perjudicará si dichas entidades se retrasan. <em>Usted será evaluado estrictamente sobre lo que concerte aquí.</em>
+                        </div>
+                    </div>
                 </section>
 
                 <!-- Evidencias -->
                 <section id="evidencias-evaluado" class="mb-5">
                     <h2><span class="step-badge bg-info text-white">3</span> Registro de Evidencias</h2>
                     <p>A medida que ejecuta sus labores a lo largo del año, es fundamental documentar los logros alcanzados. Las evidencias son las pruebas objetivas que su jefe utilizará para justificar su calificación.</p>
-                    <div class="card p-4 border-start border-4 border-info">
+                    <div class="card p-4 border-start border-4 border-info mb-3">
                         <h5 class="fw-bold"><i class="bi bi-cloud-arrow-up text-info me-2"></i> Subir Soportes</h5>
                         <ul class="text-muted mb-0">
                             <li class="mb-2">Acceda a la vista de <strong>Evidencias</strong> desde su panel de Mis Compromisos.</li>
@@ -501,13 +550,20 @@
                             </li>
                         </ul>
                     </div>
+
+                    <div class="alert alert-primary d-flex align-items-center" role="alert">
+                        <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+                        <div>
+                            <strong>Importante:</strong> Su evaluación legal depende enteramente de sus evidencias. No cometa el error de acumular el trabajo para fin de año; las evidencias se deben cargar continuamente mes a mes, asegurando que si ocurre una eventualidad (Ej. su jefe renuncia inesperadamente), el sistema cuente con los soportes para respaldar su calificación parcial obligatoria.
+                        </div>
+                    </div>
                 </section>
 
                 <!-- Evaluación Definitiva -->
                 <section id="evaluacion-notificacion" class="mb-5">
                     <h2><span class="step-badge bg-info text-white">4</span> Notificación y Aceptación de la Calificación</h2>
                     <p>Al finalizar el periodo laboral, su jefe cerrará el proceso emitiendo la calificación consolidada que promedia sus logros funcionales (85%) y la evaluación de sus competencias comportamentales (15%).</p>
-                    <div class="card p-4 border-success border-start border-4">
+                    <div class="card p-4 border-success border-start border-4 mb-3">
                         <h5 class="fw-bold"><i class="bi bi-check-circle text-success me-2"></i> Cierre del Proceso</h5>
                         <ol class="text-muted mb-3 mt-2">
                             <li class="mb-2">Cuando su evaluador guarde la calificación oficial, el estado de su proceso pasará a <strong>Evaluado</strong>.</li>
@@ -516,6 +572,13 @@
                         </ol>
                         <div class="alert alert-success mb-0 p-2 text-center small">
                             <i class="bi bi-file-earmark-check me-1"></i> Una vez aceptada, el sistema le habilitará el botón para descargar el <strong>Reporte Oficial de Evaluación en PDF</strong>, documento clave y soporte válido para su hoja de vida y escalafón en la entidad.
+                        </div>
+                    </div>
+
+                    <div class="alert alert-danger d-flex align-items-center" role="alert">
+                        <i class="bi bi-shield-exclamation fs-4 me-3"></i>
+                        <div>
+                            <strong>Tenga en Cuenta:</strong> Si usted NO está de acuerdo con la calificación obtenida, NO debe pulsar el botón de aceptar de inmediato. Usted tiene derecho a interponer recursos (reposición y apelación) en los tiempos que establece la ley desde el momento en que se le notifica la evaluación.
                         </div>
                     </div>
                 </section>
