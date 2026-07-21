@@ -47,7 +47,12 @@
                             @forelse($concertacion->evaluaciones as $eval)
                                 <tr>
                                     <td class="py-3 px-4 align-middle">{{ $eval->fecha_evaluacion ? $eval->fecha_evaluacion->format('d/m/Y') : 'Borrador' }}</td>
-                                    <td class="py-3 px-4 align-middle fw-semibold">{{ $eval->causal }}</td>
+                                    <td class="py-3 px-4 align-middle fw-semibold">
+                                        {{ $eval->causal }}
+                                        @if($eval->periodo_evaluado_inicio && $eval->periodo_evaluado_fin)
+                                            <br><small class="text-muted fw-normal"><i class="bi bi-calendar3"></i> {{ $eval->periodo_evaluado_inicio->format('d/m/Y') }} al {{ $eval->periodo_evaluado_fin->format('d/m/Y') }}</small>
+                                        @endif
+                                    </td>
                                     <td class="py-3 px-4 align-middle">
                                         @if($eval->puntaje_funcional_obtenido !== null)
                                             <span class="badge bg-success bg-opacity-10 text-success fs-6">{{ $eval->puntaje_funcional_obtenido }} / 85</span>
@@ -115,19 +120,43 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Causal de Evaluación</label>
-                        <select wire:model="causal" class="form-select">
+                        <select wire:model.live="causal" class="form-select">
                             <option value="">Seleccione una causal...</option>
-                            <option value="Parcial primer semestre">Parcial primer semestre</option>
-                            <option value="Parcial segundo semestre">Parcial segundo semestre</option>
-                            <option value="Por cambio de evaluador">Por cambio de evaluador</option>
-                            <option value="Por cambio definitivo del empleo">Por cambio definitivo del empleo</option>
-                            <option value="Por separación temporal del empleo superior a 30 días">Por separación temporal del empleo superior a 30 días</option>
-                            <option value="La que corresponda al lapso comprendido">La que corresponda al lapso comprendido...</option>
-                            <option value="Consolidación semestral">Consolidación semestral</option>
-                            <option value="Consolidación definitiva">Consolidación definitiva</option>
+                            
+                            <optgroup label="Evaluaciones Ordinarias (Semestrales)">
+                                <option value="Parcial primer semestre">Parcial primer semestre</option>
+                                <option value="Parcial segundo semestre">Parcial segundo semestre</option>
+                            </optgroup>
+                            
+                            <optgroup label="Evaluaciones Eventuales">
+                                <option value="Por cambio de evaluador">Por cambio de evaluador</option>
+                                <option value="Por cambio definitivo del empleo">Por cambio definitivo del empleo</option>
+                                <option value="Por separación temporal del empleo superior a 30 días">Por separación temporal del empleo superior a 30 días</option>
+                                <option value="La que corresponda al lapso comprendido">La que corresponda al lapso comprendido...</option>
+                            </optgroup>
+
+                            <optgroup label="Consolidaciones">
+                                <option value="Consolidación semestral">Consolidación semestral</option>
+                                <option value="Consolidación definitiva">Consolidación definitiva</option>
+                            </optgroup>
                         </select>
                         @error('causal') <span class="text-danger small">{{ $message }}</span> @enderror
                     </div>
+
+                    @if($causal && !in_array($causal, ['Consolidación semestral', 'Consolidación definitiva']))
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Fecha de Inicio del Periodo Evaluado</label>
+                                <input type="date" wire:model="periodo_evaluado_inicio" class="form-control">
+                                @error('periodo_evaluado_inicio') <span class="text-danger small">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Fecha de Fin del Periodo Evaluado</label>
+                                <input type="date" wire:model="periodo_evaluado_fin" class="form-control">
+                                @error('periodo_evaluado_fin') <span class="text-danger small">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+                    @endif
                 </div>
                 <div class="modal-footer border-0">
                     <button type="button" class="btn btn-light" wire:click="$set('showCreateModal', false)">Cancelar</button>

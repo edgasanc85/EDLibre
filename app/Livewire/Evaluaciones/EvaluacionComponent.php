@@ -7,6 +7,7 @@ use App\Models\Evaluacion;
 use App\Models\EvaluacionComportamental;
 use App\Models\EvaluacionCompromiso;
 use App\Models\Evaluador;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class EvaluacionComponent extends Component
@@ -24,6 +25,10 @@ class EvaluacionComponent extends Component
 
     // Create Evaluacion Form
     public $causal = '';
+
+    public $periodo_evaluado_inicio = '';
+
+    public $periodo_evaluado_fin = '';
 
     // Grade Evaluacion Form
     public $evaluacion_seleccionada_id;
@@ -79,12 +84,49 @@ class EvaluacionComponent extends Component
             return;
         }
 
-        $this->validate(['causal' => 'required']);
+        $isConsolidacion = in_array($this->causal, ['Consolidación semestral', 'Consolidación definitiva']);
+
+        $rules = [
+            'causal' => 'required|string',
+        ];
+
+        if (! $isConsolidacion) {
+            $rules['periodo_evaluado_inicio'] = 'required|date';
+            $rules['periodo_evaluado_fin'] = 'required|date|after_or_equal:periodo_evaluado_inicio';
+        }
+
+        $this->validate($rules);
+
+        if (! $isConsolidacion) {
+            $periodo = $this->concertacion->periodo;
+            $inicioReq = Carbon::parse($this->periodo_evaluado_inicio)->startOfDay();
+            $finReq = Carbon::parse($this->periodo_evaluado_fin)->startOfDay();
+            $pInicio = Carbon::parse($periodo->fecha_inicio)->startOfDay();
+            $pFin = Carbon::parse($periodo->fecha_fin)->startOfDay();
+
+            if ($inicioReq->lt($pInicio) || $finReq->gt($pFin)) {
+                $this->addError('periodo_evaluado_inicio', 'Las fechas deben estar dentro del periodo evaluado ('.$pInicio->format('d/m/Y').' - '.$pFin->format('d/m/Y').').');
+
+                return;
+            }
+        }
+
+        if ($isConsolidacion) {
+            $this->generarConsolidacion($this->causal);
+            $this->showCreateModal = false;
+            $this->causal = '';
+            $this->loadData();
+            session()->flash('message', 'Consolidación generada exitosamente.');
+
+            return;
+        }
 
         $eval = Evaluacion::create([
             'concertacion_id' => $this->concertacion_id,
             'causal' => $this->causal,
             'estado' => 'en_revision', // Borrador del evaluador
+            'periodo_evaluado_inicio' => $this->periodo_evaluado_inicio,
+            'periodo_evaluado_fin' => $this->periodo_evaluado_fin,
             'activo' => true,
         ]);
 
@@ -113,10 +155,74 @@ class EvaluacionComponent extends Component
 
         $this->showCreateModal = false;
         $this->causal = '';
+        $this->periodo_evaluado_inicio = '';
+        $this->periodo_evaluado_fin = '';
         $this->loadData();
 
         // Abrir modal de calificacion
         $this->openGradeModal($eval->id);
+    }
+
+    public function generarConsolidacion($causal)
+    {
+        // Buscar evaluaciones previas del periodo que no sean consolidaciones y que estén aceptadas o calificadas
+        $evaluacionesPrevias = Evaluacion::where('concertacion_id', $this->concertacion_id)
+            ->whereNotIn('causal', ['Consolidación semestral', 'Consolidación definitiva'])
+            ->whereIn('estado', ['calificada', 'aceptada'])
+            ->active()
+            ->get();
+
+        if ($evaluacionesPrevias->isEmpty()) {
+            session()->flash('error', 'No hay evaluaciones previas para consolidar.');
+
+            return null;
+        }
+
+        $totalDias = 0;
+        $sumaFuncionalPonderada = 0;
+        $sumaComportamentalPonderada = 0;
+
+        $minFechaInicio = null;
+        $maxFechaFin = null;
+
+        foreach ($evaluacionesPrevias as $ep) {
+            $dias = $ep->diasEvaluados();
+            if ($dias > 0) {
+                $totalDias += $dias;
+                $sumaFuncionalPonderada += ($ep->puntaje_funcional_obtenido * $dias);
+                $sumaComportamentalPonderada += ($ep->puntaje_comportamental_obtenido * $dias);
+            }
+
+            if (! $minFechaInicio || $ep->periodo_evaluado_inicio < $minFechaInicio) {
+                $minFechaInicio = $ep->periodo_evaluado_inicio;
+            }
+            if (! $maxFechaFin || $ep->periodo_evaluado_fin > $maxFechaFin) {
+                $maxFechaFin = $ep->periodo_evaluado_fin;
+            }
+        }
+
+        if ($totalDias == 0) {
+            session()->flash('error', 'Las evaluaciones previas no tienen días definidos para poder ponderar.');
+
+            return null;
+        }
+
+        $puntajeFuncional = $sumaFuncionalPonderada / $totalDias;
+        $puntajeComportamental = $sumaComportamentalPonderada / $totalDias;
+
+        $eval = Evaluacion::create([
+            'concertacion_id' => $this->concertacion_id,
+            'causal' => $causal,
+            'estado' => 'calificada', // Se genera como calificada para que el evaluado pueda aceptarla
+            'puntaje_funcional_obtenido' => round($puntajeFuncional, 2),
+            'puntaje_comportamental_obtenido' => round($puntajeComportamental, 2),
+            'fecha_evaluacion' => now(),
+            'periodo_evaluado_inicio' => $minFechaInicio,
+            'periodo_evaluado_fin' => $maxFechaFin,
+            'activo' => true,
+        ]);
+
+        return $eval;
     }
 
     public function openGradeModal($evaluacion_id)
@@ -216,8 +322,15 @@ class EvaluacionComponent extends Component
         ]);
 
         $this->showGradeModal = false;
+
+        if ($evaluacion->causal === 'Parcial segundo semestre') {
+            $this->generarConsolidacion('Consolidación definitiva');
+            session()->flash('message', 'Evaluación enviada exitosamente y Consolidación Definitiva generada automáticamente.');
+        } else {
+            session()->flash('message', 'Evaluación enviada al evaluado exitosamente.');
+        }
+
         $this->loadData();
-        session()->flash('message', 'Evaluación enviada al evaluado exitosamente.');
     }
 
     public function acceptEvaluacion($evaluacion_id)
