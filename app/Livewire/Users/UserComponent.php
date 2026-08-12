@@ -51,7 +51,7 @@ class UserComponent extends Component
     }
 
     public function render() {
-        // Filtrar estrictamente registros activos (is_admin = true) según la regla de persistencia
+
         $records = User::where(function($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
                       ->orWhere('numero_documento', 'like', '%' . $this->search . '%')
@@ -95,7 +95,6 @@ class UserComponent extends Component
             'email' => $this->email,
             'password' => Hash::make($this->password),
             'is_admin' => $this->is_admin,
-            'is_admin' => true // Por defecto activo
         ]);
 
         session()->flash('message', 'Usuario creado exitosamente.');
@@ -104,7 +103,7 @@ class UserComponent extends Component
     }
 
     public function edit($id) {
-        $record = User::where('is_admin', true)->findOrFail($id);
+        $record = User::findOrFail($id);
         $this->selected_id = $id;
         $this->tipo_documento = $record->tipo_documento;
         $this->numero_documento = $record->numero_documento;
@@ -120,7 +119,7 @@ class UserComponent extends Component
         $this->validate();
 
         if ($this->selected_id) {
-            $record = User::where('is_admin', true)->findOrFail($this->selected_id);
+            $record = User::findOrFail($this->selected_id);
             
             $data = [
                 'tipo_documento' => $this->tipo_documento,
@@ -144,16 +143,14 @@ class UserComponent extends Component
     }
 
     public function delete($id) {
-        // En lugar de Hard Delete, ejecutamos borrado lógico cambiando el estado a false
-        $record = User::where('is_admin', true)->findOrFail($id);
+        $record = User::findOrFail($id);
         
         if ($record->id === auth()->id()) {
-            session()->flash('error', 'No puedes eliminar tu propio usuario activo.');
+            session()->flash('error', 'No puedes eliminar tu propia cuenta.');
             return;
         }
-        
-        $record->update(['is_admin' => false]);
-        
+
+        $record->delete();
         session()->flash('message', 'Usuario eliminado exitosamente.');
     }
 }
