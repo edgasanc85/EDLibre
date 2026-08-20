@@ -381,3 +381,39 @@ test('calificar con 100 cada item en el modal guarda correctamente 85 en funcion
         ->first();
     expect((float) $ecomp->calificacion)->toBe(100.00);
 });
+
+test('cuando todas las evaluaciones del periodo tienen 100 puntos la consolidacion definitiva obtiene exactamente 100 puntos', function () {
+    // 1er Semestre con 100
+    $eval1 = Evaluacion::create([
+        'concertacion_id' => $this->concertacion->id,
+        'causal' => 'Parcial primer semestre',
+        'estado' => 'aceptada',
+        'puntaje_funcional_obtenido' => 85.00,
+        'puntaje_comportamental_obtenido' => 15.00,
+        'periodo_evaluado_inicio' => '2026-02-01',
+        'periodo_evaluado_fin' => '2026-07-31',
+        'fecha_evaluacion' => now(),
+        'activo' => true,
+    ]);
+
+    // 2do Semestre con 100
+    $eval2 = Evaluacion::create([
+        'concertacion_id' => $this->concertacion->id,
+        'causal' => 'Parcial segundo semestre',
+        'estado' => 'aceptada',
+        'puntaje_funcional_obtenido' => 85.00,
+        'puntaje_comportamental_obtenido' => 15.00,
+        'periodo_evaluado_inicio' => '2026-08-01',
+        'periodo_evaluado_fin' => '2027-01-31',
+        'fecha_evaluacion' => now(),
+        'activo' => true,
+    ]);
+
+    $service = app(EvaluacionConsolidacionService::class);
+    $consolidacion = $service->generarConsolidacionDefinitiva($this->concertacion);
+
+    expect($consolidacion)->not->toBeNull();
+    expect((float) $consolidacion->puntaje_funcional_obtenido)->toBe(85.00);
+    expect((float) $consolidacion->puntaje_comportamental_obtenido)->toBe(15.00);
+    expect((float) ($consolidacion->puntaje_funcional_obtenido + $consolidacion->puntaje_comportamental_obtenido))->toBe(100.00);
+});

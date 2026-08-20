@@ -268,7 +268,9 @@ class EvaluacionComponent extends Component
         }
 
         // GUARDADO FUNCIONAL
-        $porcentajeFuncional = 0;
+        $sumaNotasPonderadas = 0;
+        $sumaPesos = 0;
+
         foreach ($this->calificaciones as $cid => $nota) {
             $notaFloat = (float) $nota;
             $ec = EvaluacionCompromiso::where('evaluacion_id', $evaluacion->id)
@@ -277,11 +279,14 @@ class EvaluacionComponent extends Component
             if ($ec) {
                 $ec->update(['calificacion' => $notaFloat]);
                 $peso = $ec->compromisoFuncional ? (float) $ec->compromisoFuncional->peso : 0;
-                $porcentajeFuncional += ($notaFloat * $peso / 100);
+                $sumaNotasPonderadas += ($notaFloat * $peso);
+                $sumaPesos += $peso;
             }
         }
 
-        // Ponderar al 85% de la evaluación total
+        // Porcentaje funcional obtenido (0 a 100%) normalizado por el total de pesos fijados
+        $porcentajeFuncional = $sumaPesos > 0 ? ($sumaNotasPonderadas / $sumaPesos) : 0;
+        // Ponderar al 85% de la evaluación total (0 a 85 puntos)
         $puntajeTotalFuncional = round(($porcentajeFuncional * 85) / 100, 2);
 
         // GUARDADO COMPORTAMENTAL
@@ -352,7 +357,7 @@ class EvaluacionComponent extends Component
 
         $this->loadData();
     }
-    
+
     public function acceptEvaluacion($evaluacion_id)
     {
         if ($this->rolActual !== 'evaluado') {
