@@ -3,6 +3,7 @@
 namespace App\Livewire\Evidencias;
 
 use App\Models\Concertacion;
+use App\Models\Evaluacion;
 use App\Models\EvidenciaFuncional;
 use Livewire\Component;
 
@@ -26,7 +27,12 @@ class EvidenciaComponent extends Component
         $this->concertacion = Concertacion::with([
             'evaluado.user',
             'periodo',
-            'compromisosFuncionals.evidencias',
+            'evaluaciones' => function ($q) {
+                $q->active();
+            },
+            'compromisosFuncionals.evidencias' => function ($q) {
+                $q->active()->with('evaluacion');
+            },
         ])->findOrFail($this->concertacion_id);
 
         // Security check
@@ -38,40 +44,78 @@ class EvidenciaComponent extends Component
             abort(403, 'La concertación no está aprobada.');
         }
 
+        // Si no existen evaluaciones aún para la concertación, auto-inicializar las semestrales ordinarias
+        if ($this->concertacion->evaluaciones->count() === 0) {
+            $pInicio = $this->concertacion->periodo->fecha_inicio;
+            $pFin = $this->concertacion->periodo->fecha_fin;
+            $midDate = $pInicio->copy()->addMonths(6)->subDay();
+            $sem2Start = $pInicio->copy()->addMonths(6);
+
+            Evaluacion::create([
+                'concertacion_id' => $this->concertacion->id,
+                'causal' => 'Parcial primer semestre',
+                'estado' => 'creada',
+                'periodo_evaluado_inicio' => $pInicio,
+                'periodo_evaluado_fin' => $midDate,
+                'activo' => true,
+            ]);
+
+            Evaluacion::create([
+                'concertacion_id' => $this->concertacion->id,
+                'causal' => 'Parcial segundo semestre',
+                'estado' => 'creada',
+                'periodo_evaluado_inicio' => $sem2Start,
+                'periodo_evaluado_fin' => $pFin,
+                'activo' => true,
+            ]);
+
+            $this->concertacion->load('evaluaciones');
+        }
+
+        $primeraEval = $this->concertacion->evaluaciones->first();
+
         // Initialize form array
         foreach ($this->concertacion->compromisosFuncionals as $cf) {
-            $this->evidencias_nuevas[$cf->id] = [
-                'descripcion' => '',
-                'ubicacion' => '',
-            ];
+            if (! isset($this->evidencias_nuevas[$cf->id])) {
+                $this->evidencias_nuevas[$cf->id] = [
+                    'descripcion' => '',
+                    'ubicacion' => '',
+                    'evaluacion_id' => $primeraEval ? $primeraEval->id : '',
+                ];
+            }
         }
     }
 
     public function saveEvidencia($compromiso_id)
     {
-        if ($this->concertacion->evidencias_enviadas) {
-            abort(403, 'Las evidencias ya fueron enviadas y no se pueden modificar.');
-        }
-
         $data = $this->evidencias_nuevas[$compromiso_id];
 
         $this->validate([
             "evidencias_nuevas.$compromiso_id.descripcion" => 'required|string|max:1000',
             "evidencias_nuevas.$compromiso_id.ubicacion" => 'required|url|max:255',
+            "evidencias_nuevas.$compromiso_id.evaluacion_id" => 'required|exists:evaluacions,id',
         ], [
             "evidencias_nuevas.$compromiso_id.descripcion.required" => 'La descripción es requerida.',
             "evidencias_nuevas.$compromiso_id.ubicacion.required" => 'La URL es requerida.',
             "evidencias_nuevas.$compromiso_id.ubicacion.url" => 'Debe ser una URL válida (ej. https://drive.google.com/...)',
+            "evidencias_nuevas.$compromiso_id.evaluacion_id.required" => 'Debe seleccionar la evaluación asociada.',
+            "evidencias_nuevas.$compromiso_id.evaluacion_id.exists" => 'La evaluación seleccionada no es válida.',
         ]);
 
         EvidenciaFuncional::create([
             'compromiso_funcional_id' => $compromiso_id,
+            'evaluacion_id' => $data['evaluacion_id'],
             'descripcion' => $data['descripcion'],
             'ubicacion' => $data['ubicacion'],
             'activo' => true,
         ]);
 
-        $this->evidencias_nuevas[$compromiso_id] = ['descripcion' => '', 'ubicacion' => ''];
+        $primeraEval = $this->concertacion->evaluaciones->first();
+        $this->evidencias_nuevas[$compromiso_id] = [
+            'descripcion' => '',
+            'ubicacion' => '',
+            'evaluacion_id' => $data['evaluacion_id'] ?? ($primeraEval ? $primeraEval->id : ''),
+        ];
 
         session()->flash("message_$compromiso_id", 'Evidencia registrada exitosamente.');
         $this->loadData();
@@ -79,10 +123,6 @@ class EvidenciaComponent extends Component
 
     public function deleteEvidencia($evidencia_id)
     {
-        if ($this->concertacion->evidencias_enviadas) {
-            abort(403, 'Las evidencias ya fueron enviadas y no se pueden modificar.');
-        }
-
         $evidencia = EvidenciaFuncional::findOrFail($evidencia_id);
 
         // Verificar que pertenezca a la concertación actual
@@ -91,17 +131,6 @@ class EvidenciaComponent extends Component
             session()->flash("message_{$evidencia->compromiso_funcional_id}", 'Evidencia eliminada exitosamente.');
             $this->loadData();
         }
-    }
-
-    public function sendEvidencias()
-    {
-        if ($this->concertacion->evidencias_enviadas) {
-            return;
-        }
-
-        $this->concertacion->update(['evidencias_enviadas' => true]);
-        session()->flash('message_general', 'Evidencias enviadas correctamente. Ya no se podrán modificar.');
-        $this->loadData();
     }
 
     public function render()

@@ -203,10 +203,19 @@
                                         @if($cf->evidencias->where('activo', true)->count() > 0)
                                             <ul class="list-unstyled mb-0 small">
                                                 @foreach($cf->evidencias->where('activo', true) as $ev)
-                                                    <li class="mb-1">
+                                                    <li class="mb-1 d-flex align-items-center flex-wrap gap-1">
+                                                        @if($ev->evaluacion_id == $evaluacion_seleccionada_id)
+                                                            <span class="badge bg-success bg-opacity-10 text-success border border-success me-1">
+                                                                <i class="bi bi-check2 me-1"></i> Esta Evaluación
+                                                            </span>
+                                                        @elseif($ev->evaluacion)
+                                                            <span class="badge bg-secondary bg-opacity-10 text-secondary border me-1">
+                                                                {{ $ev->evaluacion->causal }}
+                                                            </span>
+                                                        @endif
                                                         <i class="bi bi-link-45deg text-primary"></i>
-                                                        <a href="{{ $ev->ubicacion }}" target="_blank">{{ $ev->descripcion }}</a>
-                                                        <span class="text-muted">({{ $ev->created_at->format('d/m/Y') }})</span>
+                                                        <a href="{{ $ev->ubicacion }}" target="_blank" class="fw-semibold text-decoration-none">{{ $ev->descripcion }}</a>
+                                                        <span class="text-muted small">({{ $ev->created_at->format('d/m/Y') }})</span>
                                                     </li>
                                                 @endforeach
                                             </ul>

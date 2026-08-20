@@ -352,7 +352,7 @@ class EvaluacionComponent extends Component
 
         $this->loadData();
     }
-
+    
     public function acceptEvaluacion($evaluacion_id)
     {
         if ($this->rolActual !== 'evaluado') {

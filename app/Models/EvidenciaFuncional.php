@@ -8,6 +8,7 @@ class EvidenciaFuncional extends Model
 {
     protected $fillable = [
         'compromiso_funcional_id',
+        'evaluacion_id',
         'descripcion',
         'ubicacion',
         'activo',
@@ -25,5 +26,10 @@ class EvidenciaFuncional extends Model
     public function compromisoFuncional()
     {
         return $this->belongsTo(CompromisoFuncional::class);
+    }
+
+    public function evaluacion()
+    {
+        return $this->belongsTo(Evaluacion::class);
     }
 }

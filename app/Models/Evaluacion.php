@@ -55,4 +55,9 @@ class Evaluacion extends Model
     {
         return $this->hasMany(EvaluacionComportamental::class);
     }
+
+    public function evidencias()
+    {
+        return $this->hasMany(EvidenciaFuncional::class);
+    }
 }
