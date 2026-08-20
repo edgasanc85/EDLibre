@@ -60,4 +60,17 @@ class Concertacion extends Model
     {
         return $this->hasMany(Evaluacion::class);
     }
+
+    public function evaluacionDefinitiva()
+    {
+        return $this->hasOne(Evaluacion::class)->where('causal', 'Consolidación definitiva')->where('activo', true);
+    }
+
+    public function tieneEvaluacionDefinitiva(): bool
+    {
+        return $this->evaluaciones()
+            ->where('causal', 'Consolidación definitiva')
+            ->where('activo', true)
+            ->exists();
+    }
 }

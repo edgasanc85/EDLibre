@@ -2,22 +2,22 @@
 
 namespace App\Livewire\Dashboard;
 
-use App\Models\Dependencia;
-use App\Models\Evaluado;
-use App\Models\Periodo;
 use App\Models\Concertacion;
+use App\Models\Periodo;
 use Livewire\Component;
 
 class DashboardAdminComponent extends Component
 {
     public $periodos = [];
+
     public $selectedPeriodoId = null;
+
     public $search = '';
 
     public function mount()
     {
         $this->periodos = Periodo::orderBy('vigencia', 'desc')->get();
-        
+
         $periodoActivo = $this->periodos->where('activo', true)->first();
         if ($periodoActivo) {
             $this->selectedPeriodoId = $periodoActivo->id;
@@ -36,14 +36,14 @@ class DashboardAdminComponent extends Component
                 'evaluado.user',
                 'evaluado.dependencia',
                 'evaluador.user',
-                'evaluaciones'
+                'evaluaciones',
             ])->where('periodo_id', $this->selectedPeriodoId);
 
-            if (!empty($this->search)) {
-                $searchTerm = '%' . strtolower($this->search) . '%';
-                $query->whereHas('evaluado.user', function($q) use ($searchTerm) {
+            if (! empty($this->search)) {
+                $searchTerm = '%'.strtolower($this->search).'%';
+                $query->whereHas('evaluado.user', function ($q) use ($searchTerm) {
                     $q->whereRaw('LOWER(name) LIKE ?', [$searchTerm])
-                      ->orWhereRaw('LOWER(numero_documento) LIKE ?', [$searchTerm]);
+                        ->orWhereRaw('LOWER(numero_documento) LIKE ?', [$searchTerm]);
                 });
             }
 
@@ -55,7 +55,7 @@ class DashboardAdminComponent extends Component
         }
 
         return view('livewire.dashboard.dashboard-admin-component', [
-            'dependenciasAgrupadas' => $dependenciasAgrupadas
+            'dependenciasAgrupadas' => $dependenciasAgrupadas,
         ]);
     }
 }

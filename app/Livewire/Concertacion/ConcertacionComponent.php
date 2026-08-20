@@ -2,31 +2,34 @@
 
 namespace App\Livewire\Concertacion;
 
-use Livewire\Component;
-use App\Models\Concertacion;
-use App\Models\CompromisoFuncional;
-use App\Models\CompromisoComportamental;
-use App\Models\Conducta;
 use App\Models\Competencia;
+use App\Models\CompromisoComportamental;
+use App\Models\CompromisoFuncional;
+use App\Models\Concertacion;
+use App\Models\Conducta;
 use App\Models\Evaluado;
 use App\Models\Evaluador;
-use App\Models\Periodo;
+use Livewire\Component;
 
 class ConcertacionComponent extends Component
 {
     public $evaluado_id;
+
     public $periodo_id;
+
     public $concertacion = null;
 
     public $funcionales = [];
+
     public $comportamentales = [];
 
     public $isReadOnly = false;
 
     // Dependencias para selects
     public $competenciasDisponibles = [];
+
     public $conductasPorCompetencia = [];
-    
+
     // Rol determinado por el sistema basado en el usuario logueado
     public $rolActual = 'evaluado'; // 'evaluado' o 'evaluador'
 
@@ -34,7 +37,7 @@ class ConcertacionComponent extends Component
     {
         $this->evaluado_id = $evaluado_id;
         $this->periodo_id = $periodo_id;
-        
+
         $evaluado = Evaluado::findOrFail($this->evaluado_id);
         $user_id = auth()->id();
 
@@ -46,7 +49,7 @@ class ConcertacionComponent extends Component
                 ->where('dependencia_id', $evaluado->dependencia_id)
                 ->active()
                 ->exists();
-                
+
             if ($esEvaluador) {
                 $this->rolActual = 'evaluador';
             } else {
@@ -60,12 +63,12 @@ class ConcertacionComponent extends Component
     public function loadData()
     {
         $evaluado = Evaluado::with('nivel')->findOrFail($this->evaluado_id);
-        
+
         // Cargar competencias por nivel
         $this->competenciasDisponibles = Competencia::active()
             ->whereIn('nivel_id', [1, $evaluado->nivel_id])
             ->get();
-            
+
         // Pre-cargar las conductas para no hacer consultas repetitivas
         foreach ($this->competenciasDisponibles as $comp) {
             $this->conductasPorCompetencia[$comp->id] = Conducta::active()->where('competencia_id', $comp->id)->get();
@@ -94,7 +97,7 @@ class ConcertacionComponent extends Component
                     'conductas_ids' => $cc->conductas->pluck('id')->toArray(),
                 ];
             })->toArray();
-            
+
             if (in_array($this->concertacion->estado, ['en_revision', 'aprobado', 'fijado_de_oficio'])) {
                 $this->isReadOnly = true;
             }
@@ -144,7 +147,7 @@ class ConcertacionComponent extends Component
     public function toggleConducta($comportamentalIndex, $conductaId)
     {
         $current = $this->comportamentales[$comportamentalIndex]['conductas_ids'] ?? [];
-        
+
         if (in_array($conductaId, $current)) {
             $current = array_diff($current, [$conductaId]);
         } else {
@@ -154,7 +157,7 @@ class ConcertacionComponent extends Component
                 session()->flash('error', 'Máximo 4 conductas por competencia.');
             }
         }
-        
+
         $this->comportamentales[$comportamentalIndex]['conductas_ids'] = array_values($current);
     }
 
@@ -199,7 +202,7 @@ class ConcertacionComponent extends Component
             }
         }
 
-        return !$hasErrors;
+        return ! $hasErrors;
     }
 
     public function saveDraft()
@@ -238,7 +241,7 @@ class ConcertacionComponent extends Component
             abort(403, 'Esta concertación ya está finalizada y no puede ser modificada.');
         }
 
-        if (!$this->concertacion) {
+        if (! $this->concertacion) {
             $this->concertacion = Concertacion::create([
                 'evaluado_id' => $this->evaluado_id,
                 'periodo_id' => $this->periodo_id,
@@ -260,7 +263,7 @@ class ConcertacionComponent extends Component
         // Limpiar compromisos viejos y recrear
         $this->concertacion->compromisosFuncionals()->delete();
         foreach ($this->funcionales as $cf) {
-            if (!empty($cf['verbo'])) {
+            if (! empty($cf['verbo'])) {
                 CompromisoFuncional::create([
                     'evaluado_id' => $this->evaluado_id,
                     'periodo_id' => $this->periodo_id,
@@ -275,7 +278,7 @@ class ConcertacionComponent extends Component
 
         $this->concertacion->compromisosComportamentals()->delete();
         foreach ($this->comportamentales as $cc) {
-            if (!empty($cc['competencia_id'])) {
+            if (! empty($cc['competencia_id'])) {
                 $comp = CompromisoComportamental::create([
                     'evaluado_id' => $this->evaluado_id,
                     'periodo_id' => $this->periodo_id,
@@ -285,7 +288,7 @@ class ConcertacionComponent extends Component
                 $comp->conductas()->sync($cc['conductas_ids']);
             }
         }
-        
+
         $this->loadData(); // Recargar IDs
     }
 

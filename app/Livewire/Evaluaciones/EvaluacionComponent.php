@@ -7,6 +7,7 @@ use App\Models\Evaluacion;
 use App\Models\EvaluacionComportamental;
 use App\Models\EvaluacionCompromiso;
 use App\Models\Evaluador;
+use App\Services\EvaluacionConsolidacionService;
 use Carbon\Carbon;
 use Livewire\Component;
 
@@ -78,7 +79,7 @@ class EvaluacionComponent extends Component
         }
     }
 
-    public function createEvaluacion()
+    public function createEvaluacion(EvaluacionConsolidacionService $consolidacionService)
     {
         if ($this->rolActual !== 'evaluador') {
             return;
@@ -112,11 +113,14 @@ class EvaluacionComponent extends Component
         }
 
         if ($isConsolidacion) {
-            $this->generarConsolidacion($this->causal);
+            $eval = $this->generarConsolidacion($this->causal, $consolidacionService);
             $this->showCreateModal = false;
             $this->causal = '';
             $this->loadData();
-            session()->flash('message', 'Consolidación generada exitosamente.');
+
+            if ($eval) {
+                session()->flash('message', 'Consolidación generada exitosamente. El evaluado debe revisarla y aceptarla.');
+            }
 
             return;
         }
@@ -163,64 +167,21 @@ class EvaluacionComponent extends Component
         $this->openGradeModal($eval->id);
     }
 
-    public function generarConsolidacion($causal)
+    public function generarConsolidacion(string $causal, ?EvaluacionConsolidacionService $service = null): ?Evaluacion
     {
-        // Buscar evaluaciones previas del periodo que no sean consolidaciones y que estén aceptadas o calificadas
-        $evaluacionesPrevias = Evaluacion::where('concertacion_id', $this->concertacion_id)
-            ->whereNotIn('causal', ['Consolidación semestral', 'Consolidación definitiva'])
-            ->whereIn('estado', ['calificada', 'aceptada'])
-            ->active()
-            ->get();
+        $service = $service ?? app(EvaluacionConsolidacionService::class);
 
-        if ($evaluacionesPrevias->isEmpty()) {
-            session()->flash('error', 'No hay evaluaciones previas para consolidar.');
+        if ($causal === 'Consolidación semestral') {
+            $eval = $service->generarConsolidacionSemestral($this->concertacion);
+        } else {
+            $eval = $service->generarConsolidacionDefinitiva($this->concertacion);
+        }
+
+        if (! $eval) {
+            session()->flash('error', 'No hay evaluaciones previas con días definidos para consolidar.');
 
             return null;
         }
-
-        $totalDias = 0;
-        $sumaFuncionalPonderada = 0;
-        $sumaComportamentalPonderada = 0;
-
-        $minFechaInicio = null;
-        $maxFechaFin = null;
-
-        foreach ($evaluacionesPrevias as $ep) {
-            $dias = $ep->diasEvaluados();
-            if ($dias > 0) {
-                $totalDias += $dias;
-                $sumaFuncionalPonderada += ($ep->puntaje_funcional_obtenido * $dias);
-                $sumaComportamentalPonderada += ($ep->puntaje_comportamental_obtenido * $dias);
-            }
-
-            if (! $minFechaInicio || $ep->periodo_evaluado_inicio < $minFechaInicio) {
-                $minFechaInicio = $ep->periodo_evaluado_inicio;
-            }
-            if (! $maxFechaFin || $ep->periodo_evaluado_fin > $maxFechaFin) {
-                $maxFechaFin = $ep->periodo_evaluado_fin;
-            }
-        }
-
-        if ($totalDias == 0) {
-            session()->flash('error', 'Las evaluaciones previas no tienen días definidos para poder ponderar.');
-
-            return null;
-        }
-
-        $puntajeFuncional = $sumaFuncionalPonderada / $totalDias;
-        $puntajeComportamental = $sumaComportamentalPonderada / $totalDias;
-
-        $eval = Evaluacion::create([
-            'concertacion_id' => $this->concertacion_id,
-            'causal' => $causal,
-            'estado' => 'calificada', // Se genera como calificada para que el evaluado pueda aceptarla
-            'puntaje_funcional_obtenido' => round($puntajeFuncional, 2),
-            'puntaje_comportamental_obtenido' => round($puntajeComportamental, 2),
-            'fecha_evaluacion' => now(),
-            'periodo_evaluado_inicio' => $minFechaInicio,
-            'periodo_evaluado_fin' => $maxFechaFin,
-            'activo' => true,
-        ]);
 
         return $eval;
     }
@@ -230,63 +191,105 @@ class EvaluacionComponent extends Component
         $evaluacion = Evaluacion::with('evaluacionCompromisos', 'evaluacionComportamentales')->findOrFail($evaluacion_id);
         $this->evaluacion_seleccionada_id = $evaluacion->id;
 
+        // Asegurar que existan los registros de compromisos funcionales
         $this->calificaciones = [];
-        foreach ($evaluacion->evaluacionCompromisos as $ec) {
-            $this->calificaciones[$ec->compromiso_funcional_id] = $ec->calificacion;
+        foreach ($this->concertacion->compromisosFuncionals as $cf) {
+            $ec = EvaluacionCompromiso::firstOrCreate(
+                [
+                    'evaluacion_id' => $evaluacion->id,
+                    'compromiso_funcional_id' => $cf->id,
+                ],
+                [
+                    'calificacion' => null,
+                    'activo' => true,
+                ]
+            );
+            $this->calificaciones[$cf->id] = $ec->calificacion;
         }
 
+        // Asegurar que existan los registros de compromisos comportamentales
         $this->calificaciones_comportamentales = [];
-        foreach ($evaluacion->evaluacionComportamentales as $ecomp) {
-            $key = $ecomp->compromiso_comportamental_id.'_'.$ecomp->conducta_id;
-            $this->calificaciones_comportamentales[$key] = $ecomp->calificacion;
+        foreach ($this->concertacion->compromisosComportamentals as $cc) {
+            foreach ($cc->conductas as $conducta) {
+                $ecomp = EvaluacionComportamental::firstOrCreate(
+                    [
+                        'evaluacion_id' => $evaluacion->id,
+                        'compromiso_comportamental_id' => $cc->id,
+                        'conducta_id' => $conducta->id,
+                    ],
+                    [
+                        'calificacion' => null,
+                        'activo' => true,
+                    ]
+                );
+                $key = $cc->id.'_'.$conducta->id;
+                $this->calificaciones_comportamentales[$key] = $ecomp->calificacion;
+            }
         }
 
         $this->showGradeModal = true;
     }
 
-    public function saveCalificaciones()
+    public function saveCalificaciones(): bool
     {
         if ($this->rolActual !== 'evaluador') {
-            return;
+            return false;
         }
 
         $evaluacion = Evaluacion::findOrFail($this->evaluacion_seleccionada_id);
 
-        // Validar que todas las notas estén entre 0 y 100
-        foreach ($this->calificaciones as $cid => $nota) {
-            if ($nota === '' || $nota === null || $nota < 0 || $nota > 100) {
-                session()->flash('error', 'Todas las calificaciones funcionales deben estar entre 0 y 100.');
+        // Validar que todas las notas funcionales estén diligenciadas y entre 0 y 100
+        if (empty($this->calificaciones)) {
+            session()->flash('error', 'No hay compromisos funcionales para calificar.');
 
-                return;
+            return false;
+        }
+
+        foreach ($this->calificaciones as $cid => $nota) {
+            if ($nota === '' || $nota === null || ! is_numeric($nota) || $nota < 0 || $nota > 100) {
+                session()->flash('error', 'Todas las calificaciones funcionales deben ser valores numéricos entre 0 y 100.');
+
+                return false;
             }
         }
 
-        foreach ($this->calificaciones_comportamentales as $key => $nota) {
-            if ($nota === '' || $nota === null || $nota < 0 || $nota > 100) {
-                session()->flash('error', 'Todas las calificaciones comportamentales deben estar entre 0 y 100.');
+        if (empty($this->calificaciones_comportamentales)) {
+            session()->flash('error', 'No hay conductas comportamentales para calificar.');
 
-                return;
+            return false;
+        }
+
+        foreach ($this->calificaciones_comportamentales as $key => $nota) {
+            if ($nota === '' || $nota === null || ! is_numeric($nota) || $nota < 0 || $nota > 100) {
+                session()->flash('error', 'Todas las calificaciones comportamentales deben ser valores numéricos entre 0 y 100.');
+
+                return false;
             }
         }
 
         // GUARDADO FUNCIONAL
-        $puntajeTotalFuncional = 0;
+        $porcentajeFuncional = 0;
         foreach ($this->calificaciones as $cid => $nota) {
+            $notaFloat = (float) $nota;
             $ec = EvaluacionCompromiso::where('evaluacion_id', $evaluacion->id)
                 ->where('compromiso_funcional_id', $cid)->first();
+
             if ($ec) {
-                $ec->update(['calificacion' => $nota]);
-                // Calculo ponderado funcional: nota * peso / 100
-                $peso = $ec->compromisoFuncional->peso;
-                $puntajeTotalFuncional += ($nota * $peso / 100);
+                $ec->update(['calificacion' => $notaFloat]);
+                $peso = $ec->compromisoFuncional ? (float) $ec->compromisoFuncional->peso : 0;
+                $porcentajeFuncional += ($notaFloat * $peso / 100);
             }
         }
+
+        // Ponderar al 85% de la evaluación total
+        $puntajeTotalFuncional = round(($porcentajeFuncional * 85) / 100, 2);
 
         // GUARDADO COMPORTAMENTAL
         $sumaNotasComportamentales = 0;
         $cantidadConductas = count($this->calificaciones_comportamentales);
 
         foreach ($this->calificaciones_comportamentales as $key => $nota) {
+            $notaFloat = (float) $nota;
             [$cc_id, $conducta_id] = explode('_', $key);
             $ecomp = EvaluacionComportamental::where('evaluacion_id', $evaluacion->id)
                 ->where('compromiso_comportamental_id', $cc_id)
@@ -294,13 +297,14 @@ class EvaluacionComponent extends Component
                 ->first();
 
             if ($ecomp) {
-                $ecomp->update(['calificacion' => $nota]);
-                $sumaNotasComportamentales += $nota;
+                $ecomp->update(['calificacion' => $notaFloat]);
+                $sumaNotasComportamentales += $notaFloat;
             }
         }
 
         $promedioComportamental = $cantidadConductas > 0 ? ($sumaNotasComportamentales / $cantidadConductas) : 0;
-        $puntajeTotalComportamental = ($promedioComportamental * 15) / 100;
+        // Ponderar al 15% de la evaluación total
+        $puntajeTotalComportamental = round(($promedioComportamental * 15) / 100, 2);
 
         $evaluacion->update([
             'puntaje_funcional_obtenido' => $puntajeTotalFuncional,
@@ -308,13 +312,21 @@ class EvaluacionComponent extends Component
         ]);
 
         session()->flash('message', 'Calificaciones guardadas exitosamente.');
+
+        return true;
     }
 
-    public function notificarEvaluacion()
+    public function notificarEvaluacion(EvaluacionConsolidacionService $consolidacionService)
     {
         if ($this->rolActual !== 'evaluador') {
             return;
         }
+
+        // Guardar primero las calificaciones diligenciadas en el formulario
+        if (! $this->saveCalificaciones()) {
+            return;
+        }
+
         $evaluacion = Evaluacion::findOrFail($this->evaluacion_seleccionada_id);
         $evaluacion->update([
             'estado' => 'calificada',
@@ -323,10 +335,18 @@ class EvaluacionComponent extends Component
 
         $this->showGradeModal = false;
 
-        if ($evaluacion->causal === 'Parcial segundo semestre') {
-            $this->generarConsolidacion('Consolidación definitiva');
-            session()->flash('message', 'Evaluación enviada exitosamente y Consolidación Definitiva generada automáticamente.');
+        $causalLower = mb_strtolower(trim($evaluacion->causal));
+
+        if ($causalLower === 'parcial segundo semestre') {
+            $consolidacionService->generarConsolidacionDefinitiva($this->concertacion);
+            session()->flash('message', 'Evaluación del segundo semestre notificada exitosamente y Evaluación Consolidada Definitiva del Periodo generada automáticamente.');
+        } elseif ($causalLower === 'consolidación definitiva') {
+            session()->flash('message', 'Evaluación Consolidada Definitiva notificada al evaluado exitosamente.');
         } else {
+            // Si ya existe una consolidación previa y se editó/notificó otra evaluación, actualizamos la consolidación
+            if ($this->concertacion->tieneEvaluacionDefinitiva()) {
+                $consolidacionService->generarConsolidacionDefinitiva($this->concertacion);
+            }
             session()->flash('message', 'Evaluación enviada al evaluado exitosamente.');
         }
 
@@ -341,7 +361,7 @@ class EvaluacionComponent extends Component
         $evaluacion = Evaluacion::findOrFail($evaluacion_id);
         $evaluacion->update(['estado' => 'aceptada']);
         $this->loadData();
-        session()->flash('message', 'Evaluación aceptada.');
+        session()->flash('message', 'Evaluación aceptada exitosamente.');
     }
 
     public function render()

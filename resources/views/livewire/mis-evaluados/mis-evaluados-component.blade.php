@@ -40,15 +40,27 @@
                                             @foreach($periodos as $periodo)
                                                 @php
                                                     $concertacion = $evaluado->concertaciones->where('periodo_id', $periodo->id)->first();
+                                                    $evalDefinitiva = $concertacion ? $concertacion->evaluaciones->whereIn('causal', ['Consolidación definitiva', 'Consolidación Definitiva'])->first() : null;
                                                 @endphp
-                                                <a href="{{ route('concertacion', ['evaluado_id' => $evaluado->id, 'periodo_id' => $periodo->id]) }}" class="btn btn-sm btn-outline-primary rounded-pill mb-1 shadow-sm" title="Periodo {{ $periodo->vigencia }}">
-                                                    <i class="bi bi-file-check me-1"></i> Revisar {{ $periodo->vigencia }}
-                                                </a>
-                                                @if($concertacion && $concertacion->estado === 'aprobado')
-                                                    <a href="{{ route('evaluaciones', $concertacion->id) }}" class="btn btn-sm btn-outline-warning rounded-pill mb-1 shadow-sm">
-                                                        <i class="bi bi-bar-chart-steps me-1"></i> Calificar
+                                                <div class="d-inline-flex flex-wrap align-items-center gap-1 mb-1">
+                                                    <a href="{{ route('concertacion', ['evaluado_id' => $evaluado->id, 'periodo_id' => $periodo->id]) }}" class="btn btn-sm btn-outline-primary rounded-pill shadow-sm" title="Periodo {{ $periodo->vigencia }}">
+                                                        <i class="bi bi-file-check me-1"></i> Revisar {{ $periodo->vigencia }}
                                                     </a>
-                                                @endif
+                                                    @if($concertacion && $concertacion->estado === 'aprobado')
+                                                        <a href="{{ route('evaluaciones', $concertacion->id) }}" class="btn btn-sm btn-outline-warning rounded-pill shadow-sm">
+                                                            <i class="bi bi-bar-chart-steps me-1"></i> Evaluaciones
+                                                        </a>
+                                                        @if($evalDefinitiva && $evalDefinitiva->estado === 'aceptada')
+                                                            <a href="{{ route('evaluacion.pdf', $evalDefinitiva->id) }}" target="_blank" class="btn btn-sm btn-outline-danger rounded-pill shadow-sm" title="PDF Consolidación Definitiva">
+                                                                <i class="bi bi-file-pdf me-1"></i> PDF Final
+                                                            </a>
+                                                        @elseif($evalDefinitiva && $evalDefinitiva->estado === 'calificada')
+                                                            <span class="badge bg-warning bg-opacity-10 text-warning border border-warning" title="Calificada, pendiente de aceptación por el evaluado">
+                                                                <i class="bi bi-hourglass-split"></i> Final Notificada
+                                                            </span>
+                                                        @endif
+                                                    @endif
+                                                </div>
                                             @endforeach
                                         </td>
                                     </tr>

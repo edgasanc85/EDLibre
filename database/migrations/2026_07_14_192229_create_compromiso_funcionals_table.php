@@ -19,11 +19,11 @@ return new class extends Migration
             $table->text('objeto');
             $table->text('condicion');
             $table->integer('peso'); // Porcentaje, e.g., 20
-            
+
             // Campo de borrado lógico
             $table->boolean('activo')->default(true);
             $table->timestamps();
-            
+
             $table->index('activo');
         });
     }

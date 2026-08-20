@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamp('fecha_aprobacion_evaluador')->nullable();
             $table->boolean('activo')->default(true);
             $table->timestamps();
-            
+
             $table->index('activo');
         });
     }

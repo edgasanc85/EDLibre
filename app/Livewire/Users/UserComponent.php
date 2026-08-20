@@ -2,61 +2,77 @@
 
 namespace App\Livewire\Users;
 
+use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class UserComponent extends Component
 {
-    use WithPagination;
     use AuthorizesRequests;
+    use WithPagination;
 
     protected $paginationTheme = 'bootstrap';
 
     // Propiedades de Búsqueda y Estado
     public $search = '';
+
     public $perPage = 10;
-    
+
     // Campos del modelo
     public $selected_id;
-    public $tipo_documento, $numero_documento, $name, $email, $password;
+
+    public $tipo_documento;
+
+    public $numero_documento;
+
+    public $name;
+
+    public $email;
+
+    public $password;
+
     public $is_admin = false;
-    
+
     // Estado de Modales o Vistas de Formulario
     public $isFormOpen = false;
+
     public $isEditMode = false;
 
     // Reglas de Validación
-    protected function rules() {
+    protected function rules()
+    {
         return [
             'tipo_documento' => 'required|in:Cédula Ciudadanía,Cédula Extranjería,Pasaporte',
-            'numero_documento' => 'required|string|max:50|unique:users,numero_documento,' . $this->selected_id,
+            'numero_documento' => 'required|string|max:50|unique:users,numero_documento,'.$this->selected_id,
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $this->selected_id,
+            'email' => 'required|email|max:255|unique:users,email,'.$this->selected_id,
             'is_admin' => 'boolean',
         ];
     }
 
-    public function updatingSearch() {
+    public function updatingSearch()
+    {
         $this->resetPage();
     }
 
-    public function mount() {
+    public function mount()
+    {
         // Simple admin check
-        if (!auth()->check() || !auth()->user()->is_admin) {
+        if (! auth()->check() || ! auth()->user()->is_admin) {
             abort(403, 'Acceso denegado. Solo administradores pueden ver esta sección.');
         }
     }
 
-    public function render() {
+    public function render()
+    {
 
-        $records = User::where(function($query) {
-                $query->where('name', 'like', '%' . $this->search . '%')
-                      ->orWhere('numero_documento', 'like', '%' . $this->search . '%')
-                      ->orWhere('email', 'like', '%' . $this->search . '%');
-            })
+        $records = User::where(function ($query) {
+            $query->where('name', 'like', '%'.$this->search.'%')
+                ->orWhere('numero_documento', 'like', '%'.$this->search.'%')
+                ->orWhere('email', 'like', '%'.$this->search.'%');
+        })
             ->orderBy('id', 'desc')
             ->paginate($this->perPage);
 
@@ -64,7 +80,8 @@ class UserComponent extends Component
             ->layout('layouts.app');
     }
 
-    public function resetInputFields() {
+    public function resetInputFields()
+    {
         $this->tipo_documento = '';
         $this->numero_documento = '';
         $this->name = '';
@@ -76,16 +93,18 @@ class UserComponent extends Component
         $this->isFormOpen = false;
     }
 
-    public function create() {
+    public function create()
+    {
         $this->resetInputFields();
         $this->isFormOpen = true;
     }
 
-    public function store() {
+    public function store()
+    {
         $this->validate();
-        
+
         $this->validate([
-            'password' => 'required|min:8'
+            'password' => 'required|min:8',
         ]);
 
         User::create([
@@ -102,7 +121,8 @@ class UserComponent extends Component
         $this->resetInputFields();
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $record = User::findOrFail($id);
         $this->selected_id = $id;
         $this->tipo_documento = $record->tipo_documento;
@@ -110,17 +130,18 @@ class UserComponent extends Component
         $this->name = $record->name;
         $this->email = $record->email;
         $this->is_admin = $record->is_admin;
-        
+
         $this->isEditMode = true;
         $this->isFormOpen = true;
     }
 
-    public function update() {
+    public function update()
+    {
         $this->validate();
 
         if ($this->selected_id) {
             $record = User::findOrFail($this->selected_id);
-            
+
             $data = [
                 'tipo_documento' => $this->tipo_documento,
                 'numero_documento' => $this->numero_documento,
@@ -128,12 +149,12 @@ class UserComponent extends Component
                 'email' => $this->email,
                 'is_admin' => $this->is_admin,
             ];
-            
-            if (!empty($this->password)) {
+
+            if (! empty($this->password)) {
                 $this->validate(['password' => 'min:8']);
                 $data['password'] = Hash::make($this->password);
             }
-            
+
             $record->update($data);
 
             session()->flash('message', 'Usuario actualizado exitosamente.');
@@ -142,11 +163,13 @@ class UserComponent extends Component
         }
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $record = User::findOrFail($id);
-        
+
         if ($record->id === auth()->id()) {
             session()->flash('error', 'No puedes eliminar tu propia cuenta.');
+
             return;
         }
 

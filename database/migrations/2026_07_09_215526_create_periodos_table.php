@@ -16,11 +16,11 @@ return new class extends Migration
             $table->string('vigencia', 20); // Ej: 2026-2027
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
-            
+
             // Campo obligatorio de borrado lógico
             $table->boolean('activo')->default(true);
             $table->timestamps();
-            
+
             $table->index('activo');
         });
     }

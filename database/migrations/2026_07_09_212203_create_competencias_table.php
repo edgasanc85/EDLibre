@@ -16,11 +16,11 @@ return new class extends Migration
             $table->foreignId('nivel_id')->constrained('nivels')->onDelete('cascade');
             $table->string('nombre');
             $table->text('descripcion')->nullable();
-            
+
             // Campo obligatorio de borrado lógico
             $table->boolean('activo')->default(true);
             $table->timestamps();
-            
+
             $table->index('activo');
         });
     }

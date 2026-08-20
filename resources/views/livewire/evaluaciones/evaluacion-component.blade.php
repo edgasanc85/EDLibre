@@ -45,9 +45,18 @@
                         </thead>
                         <tbody>
                             @forelse($concertacion->evaluaciones as $eval)
-                                <tr>
+                                @php
+                                    $isDefinitiva = in_array($eval->causal, ['Consolidación definitiva', 'Consolidación Definitiva']);
+                                    $isSemestral = $eval->causal === 'Consolidación semestral';
+                                @endphp
+                                <tr class="{{ $isDefinitiva ? 'table-warning bg-warning bg-opacity-10' : '' }}">
                                     <td class="py-3 px-4 align-middle">{{ $eval->fecha_evaluacion ? $eval->fecha_evaluacion->format('d/m/Y') : 'Borrador' }}</td>
                                     <td class="py-3 px-4 align-middle fw-semibold">
+                                        @if($isDefinitiva)
+                                            <span class="badge bg-warning text-dark me-1"><i class="bi bi-trophy-fill"></i> Evaluación Final</span>
+                                        @elseif($isSemestral)
+                                            <span class="badge bg-info text-dark me-1"><i class="bi bi-calculator"></i> Consolidación</span>
+                                        @endif
                                         {{ $eval->causal }}
                                         @if($eval->periodo_evaluado_inicio && $eval->periodo_evaluado_fin)
                                             <br><small class="text-muted fw-normal"><i class="bi bi-calendar3"></i> {{ $eval->periodo_evaluado_inicio->format('d/m/Y') }} al {{ $eval->periodo_evaluado_fin->format('d/m/Y') }}</small>
@@ -63,36 +72,35 @@
                                     </td>
                                     <td class="py-3 px-4 align-middle fw-bold">
                                         @if($eval->puntaje_funcional_obtenido !== null)
-                                            {{ $eval->puntaje_funcional_obtenido + ($eval->puntaje_comportamental_obtenido ?? 0) }} / 100
+                                            <span class="{{ $isDefinitiva ? 'text-primary fs-5' : '' }}">
+                                                {{ number_format($eval->puntaje_funcional_obtenido + ($eval->puntaje_comportamental_obtenido ?? 0), 2) }} / 100
+                                            </span>
                                         @else
                                             -
                                         @endif
                                     </td>
                                     <td class="py-3 px-4 align-middle">
                                         @if($eval->estado == 'en_revision') <span class="badge bg-secondary">Borrador Evaluador</span>
-                                        @elseif($eval->estado == 'calificada') <span class="badge bg-primary">Enviada a Evaluado</span>
-                                        @elseif($eval->estado == 'aceptada') <span class="badge bg-success">Aceptada</span>
+                                        @elseif($eval->estado == 'calificada') <span class="badge bg-primary">Pendiente Aceptación</span>
+                                        @elseif($eval->estado == 'aceptada') <span class="badge bg-success"><i class="bi bi-check-all me-1"></i> Aceptada</span>
                                         @elseif($eval->estado == 'rechazada_comision') <span class="badge bg-danger">En Comisión</span>
                                         @endif
                                     </td>
                                     <td class="py-3 px-4 align-middle text-center">
                                         @if($rolActual == 'evaluador' && in_array($eval->estado, ['en_revision']))
-                                            <button wire:click="openGradeModal({{ $eval->id }})" class="btn btn-sm btn-primary rounded-pill px-3">
+                                            <button wire:click="openGradeModal({{ $eval->id }})" class="btn btn-sm btn-primary rounded-pill px-3 shadow-sm">
                                                 <i class="bi bi-pencil-square"></i> Calificar
                                             </button>
                                         @endif
                                         @if($rolActual == 'evaluado' && $eval->estado == 'calificada')
-                                            <button wire:click="acceptEvaluacion({{ $eval->id }})" class="btn btn-sm btn-success rounded-pill px-3" onclick="confirm('¿Estás seguro de ACEPTAR esta calificación?') || event.stopImmediatePropagation()">
-                                                <i class="bi bi-check-circle"></i> Aceptar
+                                            <button wire:click="acceptEvaluacion({{ $eval->id }})" class="btn btn-sm btn-success rounded-pill px-3 shadow-sm" onclick="confirm('¿Estás seguro de ACEPTAR esta calificación?') || event.stopImmediatePropagation()">
+                                                <i class="bi bi-check-circle me-1"></i> Aceptar
                                             </button>
                                         @endif
                                         @if($eval->estado == 'aceptada')
-                                            <a href="{{ route('evaluacion.pdf', $eval->id) }}" target="_blank" class="btn btn-sm btn-outline-danger rounded-pill px-3" title="Descargar Reporte PDF">
-                                                <i class="bi bi-file-pdf"></i> PDF
+                                            <a href="{{ route('evaluacion.pdf', $eval->id) }}" target="_blank" class="btn btn-sm btn-outline-danger rounded-pill px-3 shadow-sm" title="Descargar Reporte PDF">
+                                                <i class="bi bi-file-pdf me-1"></i> PDF
                                             </a>
-                                        @endif
-                                        @if($eval->estado != 'en_revision')
-                                            <!-- Ver detalle -->
                                         @endif
                                     </td>
                                 </tr>
@@ -159,8 +167,10 @@
                     @endif
                 </div>
                 <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-light" wire:click="$set('showCreateModal', false)">Cancelar</button>
-                    <button type="button" class="btn btn-warning fw-bold" wire:click="createEvaluacion">Crear y Calificar</button>
+                    <button type="button" class="btn btn-light rounded-pill px-4" wire:click="$set('showCreateModal', false)">Cancelar</button>
+                    <button type="button" class="btn btn-warning fw-bold rounded-pill px-4" wire:click="createEvaluacion">
+                        {{ in_array($causal, ['Consolidación semestral', 'Consolidación definitiva']) ? 'Generar Consolidación' : 'Crear y Calificar' }}
+                    </button>
                 </div>
             </div>
         </div>

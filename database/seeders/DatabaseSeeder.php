@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Nivel;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -38,7 +39,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($niveles as $nivel) {
-            \App\Models\Nivel::firstOrCreate(['id' => $nivel['id']], $nivel);
+            Nivel::firstOrCreate(['id' => $nivel['id']], $nivel);
         }
 
         // Sembrar Competencias y Conductas de Ley

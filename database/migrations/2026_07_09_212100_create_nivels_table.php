@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('nivels', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            
+
             // Campo obligatorio de borrado lógico
             $table->boolean('activo')->default(true);
             $table->timestamps();
-            
+
             $table->index('activo');
         });
     }

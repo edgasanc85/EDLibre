@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ConcertacionPdfController;
+use App\Http\Controllers\EvaluacionPdfController;
 use App\Http\Controllers\HomeController;
 use App\Livewire\Competencias\CompetenciaComponent;
 use App\Livewire\Concertacion\ConcertacionComponent;
@@ -37,7 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/evaluadores', EvaluadorComponent::class)->name('evaluadores');
     Route::get('/evaluados', EvaluadoComponent::class)->name('evaluados');
     Route::get('/concertacion/{id}/pdf', [ConcertacionPdfController::class, 'export'])->name('concertacion.pdf');
-    Route::get('/evaluacion/{id}/pdf', [\App\Http\Controllers\EvaluacionPdfController::class, 'export'])->name('evaluacion.pdf');
+    Route::get('/evaluacion/{id}/pdf', [EvaluacionPdfController::class, 'export'])->name('evaluacion.pdf');
     Route::get('/concertacion/{evaluado_id}/{periodo_id}', ConcertacionComponent::class)->name('concertacion');
     Route::get('/evidencias/{concertacion_id}', EvidenciaComponent::class)->name('evidencias');
     Route::get('/evaluaciones/{concertacion_id}', EvaluacionComponent::class)->name('evaluaciones');

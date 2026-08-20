@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->foreignId('parent_id')->nullable()->constrained('dependencias')->onDelete('cascade');
-            
+
             // Campo de borrado lógico (True = Activo/Visible, False = Borrado/Oculto)
             $table->boolean('activo')->default(true);
             $table->timestamps();
-            
+
             // Índice de optimización
             $table->index('activo');
         });

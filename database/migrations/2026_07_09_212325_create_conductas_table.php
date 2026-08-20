@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('competencia_id')->constrained('competencias')->onDelete('cascade');
             $table->text('descripcion');
-            
+
             // Campo obligatorio de borrado lógico
             $table->boolean('activo')->default(true);
             $table->timestamps();
-            
+
             $table->index('activo');
         });
     }

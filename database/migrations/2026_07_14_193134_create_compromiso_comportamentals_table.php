@@ -18,15 +18,15 @@ return new class extends Migration
             $table->foreignId('competencia_id')->constrained('competencias')->onDelete('cascade');
             $table->boolean('activo')->default(true);
             $table->timestamps();
-            
+
             $table->index('activo');
         });
 
         Schema::create('cc_conductas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('compromiso_comportamental_id')
-                  ->constrained('compromiso_comportamentals', 'id', 'cc_comp_id_fk')
-                  ->onDelete('cascade');
+                ->constrained('compromiso_comportamentals', 'id', 'cc_comp_id_fk')
+                ->onDelete('cascade');
             $table->foreignId('conducta_id')->constrained('conductas')->onDelete('cascade');
         });
     }

@@ -18,11 +18,11 @@ return new class extends Migration
             $table->string('cargo');
             $table->date('fecha_ingreso');
             $table->date('fecha_retiro')->nullable()->default(null);
-            
+
             // Campo obligatorio de borrado lógico
             $table->boolean('activo')->default(true);
             $table->timestamps();
-            
+
             $table->index('activo');
         });
     }
