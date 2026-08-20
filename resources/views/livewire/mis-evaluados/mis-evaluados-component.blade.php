@@ -2,6 +2,20 @@
     <div class="container-fluid px-4 py-4">
         <h1 class="h3 mb-4 text-dark fw-bold">Mis Evaluados</h1>
 
+        @if(session()->has('message'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('message') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if(session()->has('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         @if(!$evaluador)
             <div class="alert alert-warning">
                 No tienes un perfil de Evaluador asignado en el sistema.
@@ -26,7 +40,7 @@
                                     <th class="py-3 px-4 text-muted fw-bold">Documento</th>
                                     <th class="py-3 px-4 text-muted fw-bold">Cargo</th>
                                     <th class="py-3 px-4 text-muted fw-bold">Nivel</th>
-                                    <th class="py-3 px-4 text-muted fw-bold text-end">Acciones (Por Periodo Activo)</th>
+                                    <th class="py-3 px-4 text-muted fw-bold text-end">Estado y Acciones (Por Periodo Activo)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -42,20 +56,42 @@
                                                     $concertacion = $evaluado->concertaciones->where('periodo_id', $periodo->id)->first();
                                                     $evalDefinitiva = $concertacion ? $concertacion->evaluaciones->whereIn('causal', ['Consolidación definitiva', 'Consolidación Definitiva'])->first() : null;
                                                 @endphp
-                                                <div class="d-inline-flex flex-wrap align-items-center gap-1 mb-1">
-                                                    <a href="{{ route('concertacion', ['evaluado_id' => $evaluado->id, 'periodo_id' => $periodo->id]) }}" class="btn btn-sm btn-outline-primary rounded-pill shadow-sm" title="Periodo {{ $periodo->vigencia }}">
+                                                <div class="d-inline-flex flex-wrap align-items-center gap-1 mb-2">
+                                                    @if($concertacion && $concertacion->estado === 'en_revision')
+                                                        <span class="badge bg-warning bg-opacity-10 text-warning border border-warning" title="El evaluado envió los compromisos para revisión">
+                                                            <i class="bi bi-clock-history me-1"></i> Pendiente Aprobación
+                                                        </span>
+                                                        <button wire:click="approveConcertacion({{ $concertacion->id }})" class="btn btn-sm btn-success rounded-pill shadow-sm" onclick="confirm('¿Estás seguro de APROBAR los compromisos de esta concertación?') || event.stopImmediatePropagation()" title="Aprobar Concertación">
+                                                            <i class="bi bi-check-circle me-1"></i> Aprobar
+                                                        </button>
+                                                    @elseif($concertacion && $concertacion->estado === 'aprobado')
+                                                        <span class="badge bg-success bg-opacity-10 text-success border border-success" title="Concertación aprobada por el evaluador">
+                                                            <i class="bi bi-check-circle me-1"></i> Concertación Aprobada
+                                                        </span>
+                                                    @elseif($concertacion && $concertacion->estado === 'borrador')
+                                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border" title="El evaluado aún no ha enviado los compromisos">
+                                                            <i class="bi bi-pencil me-1"></i> En Borrador
+                                                        </span>
+                                                    @else
+                                                        <span class="badge bg-light text-muted border" title="Sin concertación iniciada">
+                                                            <i class="bi bi-dash-circle me-1"></i> Sin Concertar
+                                                        </span>
+                                                    @endif
+
+                                                    <a href="{{ route('concertacion', ['evaluado_id' => $evaluado->id, 'periodo_id' => $periodo->id]) }}" class="btn btn-sm btn-outline-primary rounded-pill shadow-sm" title="Revisar formulario de concertación del periodo {{ $periodo->vigencia }}">
                                                         <i class="bi bi-file-check me-1"></i> Revisar {{ $periodo->vigencia }}
                                                     </a>
+
                                                     @if($concertacion && $concertacion->estado === 'aprobado')
-                                                        <a href="{{ route('evaluaciones', $concertacion->id) }}" class="btn btn-sm btn-outline-warning rounded-pill shadow-sm">
+                                                        <a href="{{ route('evaluaciones', $concertacion->id) }}" class="btn btn-sm btn-outline-warning rounded-pill shadow-sm" title="Ir a eventos de evaluación">
                                                             <i class="bi bi-bar-chart-steps me-1"></i> Evaluaciones
                                                         </a>
                                                         @if($evalDefinitiva && $evalDefinitiva->estado === 'aceptada')
-                                                            <a href="{{ route('evaluacion.pdf', $evalDefinitiva->id) }}" target="_blank" class="btn btn-sm btn-outline-danger rounded-pill shadow-sm" title="PDF Consolidación Definitiva">
+                                                            <a href="{{ route('evaluacion.pdf', $evalDefinitiva->id) }}" target="_blank" class="btn btn-sm btn-outline-danger rounded-pill shadow-sm" title="Descargar PDF de la Evaluación Final Definitiva">
                                                                 <i class="bi bi-file-pdf me-1"></i> PDF Final
                                                             </a>
                                                         @elseif($evalDefinitiva && $evalDefinitiva->estado === 'calificada')
-                                                            <span class="badge bg-warning bg-opacity-10 text-warning border border-warning" title="Calificada, pendiente de aceptación por el evaluado">
+                                                            <span class="badge bg-warning bg-opacity-10 text-warning border border-warning" title="Evaluación final enviada, pendiente de aceptación por el evaluado">
                                                                 <i class="bi bi-hourglass-split"></i> Final Notificada
                                                             </span>
                                                         @endif
